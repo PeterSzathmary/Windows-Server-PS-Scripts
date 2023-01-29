@@ -1,0 +1,16 @@
+(INCREASE TABLESPACE)
+alter database datafile  '/u01/oracle/oradata/system01.dbf' resize 5000M; (5 GB)
+
+(oerr ora <ora error number>)
+
+(ADD ORACLE_HOME (where the bin folder is located) VARIABLE TO SYSTEM ENVIRONMENTS PROPERTIES)
+
+set term off
+set feed off
+spool c:\test_001.txt
+@<full path to tablespace_info.sql script>
+spool off
+
+
+(RUN SCRIPT FROM CMD AND EXIT FROM SQLPLUS)
+echo exit | sqlplus / as sysdba @main.sql

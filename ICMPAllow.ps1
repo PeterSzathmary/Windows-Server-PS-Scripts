@@ -1,0 +1,2 @@
+New-NetFirewallRule -DisplayName "Allow ICMPv4 In Requests" -Direction Inbound -Program Any -Protocol ICMPv4 -Action Allow
+New-NetFirewallRule -DisplayName "Allow ICMPv4 Out Requests" -Direction Outbound -Program Any -Protocol ICMPv4 -Action Allow

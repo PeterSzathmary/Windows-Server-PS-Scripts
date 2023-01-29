@@ -1,0 +1,1 @@
+New-VirtualDisk -StoragePoolFriendlyName "StoragePool1" -FriendlyName "vDisk1" -UseMaximumSize -ProvisioningType Fixed -ResiliencySettingName Simple

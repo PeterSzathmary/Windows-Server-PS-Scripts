@@ -1,0 +1,1 @@
+Get-Service -Name MapsBroker | Set-Service -StartupType Disabled -Confirm:$false

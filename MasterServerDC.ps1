@@ -7,6 +7,9 @@ $staticIP = "10.0.0.1"
 $renameComputer = "WIN-DC-001"
 $hMailAdminPassword = "Start123"
 
+# this array will hold all developers in the team
+$swotMembers = @()
+
 # restart script after renamed computer
 # restart script after ad ds installation
 
@@ -231,6 +234,14 @@ function CreateOUStudents {
     }
 }
 
+$swotGroupName = "SWOT Developers"
+function CreateNewADGroup {
+    $forest = Get-ADDomain | Select-Object -ExpandProperty Forest
+    $arr = $forest.Split(".")
+    $groupDescription = "Members of this group are SWOT Developers"
+    New-ADGroup -Name $swotGroupName -SamAccountName $swotGroupName -GroupCategory Security -GroupScope Global -DisplayName $swotGroupName -Path "CN=Users,DC=$($arr[0]),DC=$($arr[1])" -Description $groupDescription
+}
+
 # Create new AD users
 function CreateNewADUsers {
     if (!(Test-Path "C:\students_created")) {
@@ -243,7 +254,12 @@ function CreateNewADUsers {
         $data = Import-Csv -Path C:\Users\Administrator\Desktop\MOCK_DATA.csv
         $defaultPassword = ConvertTo-SecureString "Changeme123" -AsPlainText -Force
         foreach ($student in $data) {
+
             $samAccountName = "$($student.first_name.Substring(0, 1))$($student.last_name)".ToLower()
+
+            if ($student.team -eq "swot") {
+                $swotMembers += $samAccountName
+            }
             
             New-ADUser `
                 -Name "$($student.first_name) $($student.last_name)" `
@@ -257,6 +273,8 @@ function CreateNewADUsers {
             Set-ADUser -Identity $samAccountName -ChangePasswordAtLogon $true
             Enable-ADAccount -Identity $samAccountName
         }
+
+        Add-ADGroupMember -Identity $swotGroupName -Members $swotMembers
     
         New-Item -Path "C:\" -Name "students_created" -ItemType File
     }

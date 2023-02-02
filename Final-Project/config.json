@@ -16,5 +16,11 @@
             "dnsServer": "10.0.0.1"
         }
     ],
-    "ouStudents": "Students"
+    "ouStudents": "Students",
+    "adGroups": [
+        {
+            "groupName": "SWOT Developers",
+            "groupDescription": "Members of this group are SWOT Developers"
+        }
+    ]
 }

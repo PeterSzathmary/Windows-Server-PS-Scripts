@@ -19,6 +19,7 @@
 . .\Enable-ADRecycleBin.ps1
 . .\Install-DHCP.ps1
 . .\New-OU.ps1
+. .\New-ADGroup.ps1
 
 Import-Module .\classes\DHCPScope.ps1
 
@@ -64,5 +65,6 @@ if (Test-Path "C:\computer_renamed") {
 
     Install-DHCP -Domain $config.domainName -StaticIP $config.staticIP -DHCPscope $dhcpScope
     New-OU -Name $config.ouStudents
+    New-ADGroup -GroupName $config.adGroups[0].groupName -GroupDescription $config.adGroups[0].groupDescription
     Install-hMailServer
 }

@@ -3,6 +3,7 @@
 . .\Set-StaticIP.ps1
 . .\Unblock-Protocol.ps1
 . .\Rename-ThisComputer.ps1
+. .\Install-MozillaFirefox.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -23,3 +24,4 @@ Unblock-Protocol -Protocol 25 # SMTP
 Unblock-Protocol -Protocol 110 # POP3
 Unblock-Protocol -Protocol 143 # IMAP
 Rename-ThisComputer -Name $config.computerName
+Install-MozillaFirefox -SleepTime 35

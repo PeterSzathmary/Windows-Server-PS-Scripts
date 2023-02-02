@@ -7,6 +7,7 @@
 . .\Show-FileExtensions.ps1
 . .\Install-7Zip.ps1
 . .\Install-Chocolatey.ps1
+. .\Install-ChromeBeta.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -30,4 +31,5 @@ Install-MozillaFirefox -SleepTime 35
 Show-FileExtensions
 Install-7Zip
 Install-Chocolatey
+Install-ChromeBeta
 Rename-ThisComputer -Name $config.computerName

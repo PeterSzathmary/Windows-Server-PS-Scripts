@@ -1,11 +1,3 @@
-function InstallFirefox {
-    if (!(Test-Path "C:\firefox_installed")) {
-        
-    }
-    else {
-        Write-Host "Firefox already installed."
-    }
-}
 <#
 .SYNOPSIS
     A short one-line action-based description, e.g. 'Tests if a function is valid'

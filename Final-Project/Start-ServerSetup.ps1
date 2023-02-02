@@ -9,6 +9,7 @@
 . .\Install-Chocolatey.ps1
 . .\Install-ChromeBeta.ps1
 . .\Install-ChromeDriver.ps1
+. .\Install-SeleniumWebDriver.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -34,4 +35,5 @@ Install-7Zip
 Install-Chocolatey
 Install-ChromeBeta
 Install-ChromeDriver
+Install-SeleniumWebDriver
 Rename-ThisComputer -Name $config.computerName

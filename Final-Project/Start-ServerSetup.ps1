@@ -5,6 +5,7 @@
 . .\Rename-ThisComputer.ps1
 . .\Install-MozillaFirefox.ps1
 . .\Show-FileExtensions.ps1
+. .\Install-7Zip.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -26,4 +27,5 @@ Unblock-Protocol -Protocol 110 # POP3
 Unblock-Protocol -Protocol 143 # IMAP
 Install-MozillaFirefox -SleepTime 35
 Show-FileExtensions
+Install-7Zip
 Rename-ThisComputer -Name $config.computerName

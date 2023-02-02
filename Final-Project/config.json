@@ -2,6 +2,6 @@
     "domainName": "windows.lab",
     "allIsDone": true,
     "staticIP": "10.0.0.1",
-    "renameComputer": "WIN-DC-001",
+    "computerName": "WIN-DC-001",
     "hMailAdminPassword": "Start123"
 }

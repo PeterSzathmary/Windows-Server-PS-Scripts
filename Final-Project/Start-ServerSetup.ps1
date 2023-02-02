@@ -14,12 +14,11 @@
 . .\Install-NETFramework.ps1
 . .\Get-MozillaThunderbird.ps1
 . .\Install-hMailServer.ps1
+. .\Install-ADDS.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
 $config = (Get-Content ".\config.json" -Raw) | ConvertFrom-Json
-#$config.psobject.properties.name
-#$config.domainName
 
 # this array will hold all developers in the team
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
@@ -46,5 +45,6 @@ Get-MozillaThunderbird
 Rename-ThisComputer -Name $config.computerName
 
 if (Test-Path "C:\computer_renamed") {
+    Install-ADDS
     Install-hMailServer
 }

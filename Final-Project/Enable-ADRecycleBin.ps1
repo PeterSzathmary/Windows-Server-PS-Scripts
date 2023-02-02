@@ -8,7 +8,7 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Enable-ADRecycleBin
+    Enable-ADRecycleBin -Domain "windows.lab"
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
 
@@ -35,7 +35,7 @@ function Enable-ADRecycleBin {
     
     process {
         $computerName = hostname.exe
-        
+
         Enable-ADOptionalFeature -Identity "Recycle Bin Feature" -Scope ForestOrConfigurationSet -Target $Domain -Server $computerName -Confirm:$false
 
         New-Item -Path "C:\" -Name $Flag -ItemType File

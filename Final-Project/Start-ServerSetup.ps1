@@ -18,6 +18,7 @@
 . .\Install-ADDSForest.ps1
 . .\Enable-ADRecycleBin.ps1
 . .\Install-DHCP.ps1
+. .\New-OU.ps1
 
 Import-Module .\classes\DHCPScope.ps1
 
@@ -62,5 +63,6 @@ if (Test-Path "C:\computer_renamed") {
     )
 
     Install-DHCP -Domain $config.domainName -StaticIP $config.staticIP -DHCPscope $dhcpScope
+    New-OU -Name $config.ouStudents
     Install-hMailServer
 }

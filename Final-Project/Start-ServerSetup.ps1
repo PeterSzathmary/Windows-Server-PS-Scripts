@@ -15,9 +15,8 @@
 . .\Get-MozillaThunderbird.ps1
 . .\Install-hMailServer.ps1
 . .\Install-ADDS.ps1
+. .\Install-ADDSForest.ps1
 
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
-        Justification = 'variable will be used later')]
 $config = (Get-Content ".\config.json" -Raw) | ConvertFrom-Json
 
 # this array will hold all developers in the team
@@ -46,5 +45,6 @@ Rename-ThisComputer -Name $config.computerName
 
 if (Test-Path "C:\computer_renamed") {
     Install-ADDS
+    Install-ADDSForest -Password $(ConvertTo-SecureString $config.safeModeAdministratorPassword -AsPlainText -Force) -Domain $config.domainName
     Install-hMailServer
 }

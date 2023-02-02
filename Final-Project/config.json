@@ -3,5 +3,6 @@
     "allIsDone": true,
     "staticIP": "10.0.0.1",
     "computerName": "WIN-DC-001",
-    "hMailAdminPassword": "Start123"
+    "hMailAdminPassword": "Start123",
+    "safeModeAdministratorPassword": "IWillNeverUseIt_123"
 }

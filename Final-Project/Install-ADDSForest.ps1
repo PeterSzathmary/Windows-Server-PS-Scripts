@@ -1,0 +1,53 @@
+<#
+.SYNOPSIS
+    Install AD DS Forest
+.DESCRIPTION
+    A longer description of the function, its purpose, common use cases, etc.
+.NOTES
+    Information or caveats about the function e.g. 'This function is not supported in Linux'
+.LINK
+    Specify a URI to a help page, this will show when Get-Help -Online is used.
+.EXAMPLE
+    Install-ADDSForest -Password $(ConvertTo-SecureString <=some_password=> -AsPlainText -Force) -Domain <=some_domain_name=>
+    Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
+#>
+function Install-ADDSForest {
+    [CmdletBinding()]
+    param (
+        # safe mode administrator password
+        [Parameter(
+            Position = 0,
+            Mandatory = $true
+        )]
+        [securestring]
+        $Password,
+
+        # domain name
+        [Parameter(
+            Position = 1,
+            Mandatory = $true
+        )]
+        [string]
+        $Domain
+    )
+    
+    begin {
+        $Flag = "forest_installed"
+        if (Test-Path "C:\$Flag") {
+            Write-Host "AD DS Forest already installed" -ForegroundColor Yellow
+            break
+        }
+    }
+    
+    process {
+        #$secureString = ConvertTo-SecureString $Password -AsPlainText -Force
+        #$domain = $domainName
+        Install-ADDSforest -DomainName $Domain -InstallDns -SafeModeAdministratorPassword $Password -Confirm:$false
+
+        New-Item -Path "C:\" -Name $Flag -ItemType File
+    }
+    
+    end {
+        Write-Host "AD DS Forest successfully installed" -ForegroundColor Green
+    }
+}#Install-ADDSForest

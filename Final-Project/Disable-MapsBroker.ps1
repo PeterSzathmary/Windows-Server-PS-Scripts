@@ -11,7 +11,7 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Test-MyTestFunction -Verbose
+    Disable-MapsBroker
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
 
@@ -38,4 +38,4 @@ function Disable-MapsBroker {
     end {
         Write-Host "MapsBroker successfully disabled." -ForegroundColor Green
     }
-}
+}#Disable-MapsBroker

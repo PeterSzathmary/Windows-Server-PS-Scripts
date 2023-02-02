@@ -1,4 +1,5 @@
 . .\Restart-ScriptAtStartup.ps1
+. .\Disable-MapsBroker.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -12,3 +13,4 @@ $config = (Get-Content ".\config.json" -Raw) | ConvertFrom-Json
 $swotMembers = @()
 
 Restart-ScriptAtStartup -Path $MyInvocation.MyCommand.Path
+Disable-MapsBroker

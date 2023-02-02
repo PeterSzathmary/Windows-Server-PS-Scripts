@@ -35,7 +35,7 @@ function Restart-ScriptAtStartup {
             # get the subkey
             $Key = Get-Item -LiteralPath "HKLM:\SOFTWARE\MyFlags"
 
-            if ($Key.GetValue("StartAtLogon", $null) -eq $null) {
+            if ($null -eq $Key.GetValue("StartAtLogon", $null)) {
                 New-ItemProperty -Path "HKLM:\Software\MyFlags" -Name "StartAtLogon" -Value 1
             }
             else {
@@ -48,14 +48,11 @@ function Restart-ScriptAtStartup {
     }
     
     process {
-        if (!$Key.GetValue("StartAtLogon", $null) -ne $null) {
-            
             New-Item `
                 -Path "C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" `
                 -Name "startup.cmd" `
                 -ItemType "file" `
                 -Value "start powershell -noexit -file '$Path'"
-        }
     }
     
     end {

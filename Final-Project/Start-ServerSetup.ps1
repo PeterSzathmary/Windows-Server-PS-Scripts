@@ -13,6 +13,7 @@
 . .\Get-hMailServer.ps1
 . .\Install-NETFramework.ps1
 . .\Get-MozillaThunderbird.ps1
+. .\Install-hMailServer.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -43,3 +44,7 @@ Install-NETFramework
 Get-hMailServer
 Get-MozillaThunderbird
 Rename-ThisComputer -Name $config.computerName
+
+if (Test-Path "C:\computer_renamed") {
+    Install-hMailServer
+}

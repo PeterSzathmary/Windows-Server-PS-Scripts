@@ -1,15 +1,4 @@
 
-function AllowICMPv4 {
-    if (!(Test-Path "C:\allow_icmpv4")) {
-        New-NetFirewallRule -DisplayName "Allow ICMPv4 In Requests" -Direction Inbound -Program Any -Protocol ICMPv4 -Action Allow
-        New-NetFirewallRule -DisplayName "Allow ICMPv4 Out Requests" -Direction Outbound -Program Any -Protocol ICMPv4 -Action Allow
-    
-        New-Item -Path "C:\" -Name "allow_icmpv4" -ItemType File
-    }
-    else {
-        Write-Host "ICMPv4 In and Out requests already configured."
-    }
-}
 <#
 .SYNOPSIS
     Unblock protocol in the firewall.

@@ -11,6 +11,7 @@
 . .\Install-ChromeDriver.ps1
 . .\Install-SeleniumWebDriver.ps1
 . .\Get-hMailServer.ps1
+. .\Install-NETFramework.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -37,5 +38,6 @@ Install-Chocolatey
 Install-ChromeBeta
 Install-ChromeDriver
 Install-SeleniumWebDriver
+Install-NETFramework
 Get-hMailServer
 Rename-ThisComputer -Name $config.computerName

@@ -6,6 +6,7 @@
 . .\Install-MozillaFirefox.ps1
 . .\Show-FileExtensions.ps1
 . .\Install-7Zip.ps1
+. .\Install-Chocolatey.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -28,4 +29,5 @@ Unblock-Protocol -Protocol 143 # IMAP
 Install-MozillaFirefox -SleepTime 35
 Show-FileExtensions
 Install-7Zip
+Install-Chocolatey
 Rename-ThisComputer -Name $config.computerName

@@ -1,8 +1,19 @@
 {
     "domainName": "windows.lab",
+    "domainServerAdminPassword": "Start123",
     "allIsDone": true,
     "staticIP": "10.0.0.1",
     "computerName": "WIN-DC-001",
     "hMailAdminPassword": "Start123",
-    "safeModeAdministratorPassword": "IWillNeverUseIt_123"
+    "safeModeAdministratorPassword": "IWillNeverUseIt_123",
+    "dhcpScopes": [
+        {
+            "name": "Students3v",
+            "startRange": "10.0.0.30",
+            "endRange": "10.0.0.60",
+            "subnetMask": "255.255.255.0",
+            "scopeID": "10.0.0.0",
+            "dnsServer": "10.0.0.1"
+        }
+    ]
 }

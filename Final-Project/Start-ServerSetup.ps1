@@ -17,12 +17,15 @@
 . .\Install-ADDS.ps1
 . .\Install-ADDSForest.ps1
 . .\Enable-ADRecycleBin.ps1
+. .\Install-DHCP.ps1
+
+Import-Module .\classes\DHCPScope.ps1
 
 $config = (Get-Content ".\config.json" -Raw) | ConvertFrom-Json
 
 # this array will hold all developers in the team
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
-        Justification = 'variable will be used later')]
+    Justification = 'variable will be used later')]
 $swotMembers = @()
 
 Restart-ScriptAtStartup -Path $MyInvocation.MyCommand.Path
@@ -48,5 +51,16 @@ if (Test-Path "C:\computer_renamed") {
     Install-ADDS
     Install-ADDSForest -Password $(ConvertTo-SecureString $config.safeModeAdministratorPassword -AsPlainText -Force) -Domain $config.domainName
     Enable-ADRecycleBin -Domain $config.domainName
+
+    [DHCPScope]$dhcpScope = [DHCPScope]::new(
+        $config.dhcpScopes[0].name,
+        $config.dhcpScopes[0].startRange,
+        $config.dhcpScopes[0].endRange,
+        $config.dhcpScopes[0].subnetMask,
+        $config.dhcpScopes[0].scopeID,
+        $config.dhcpScopes[0].dnsServer
+    )
+
+    Install-DHCP -Domain $config.domainName -StaticIP $config.staticIP -DHCPscope $dhcpScope
     Install-hMailServer
 }

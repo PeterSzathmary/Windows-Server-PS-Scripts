@@ -16,6 +16,7 @@
 . .\Install-hMailServer.ps1
 . .\Install-ADDS.ps1
 . .\Install-ADDSForest.ps1
+. .\Enable-ADRecycleBin.ps1
 
 $config = (Get-Content ".\config.json" -Raw) | ConvertFrom-Json
 
@@ -46,5 +47,6 @@ Rename-ThisComputer -Name $config.computerName
 if (Test-Path "C:\computer_renamed") {
     Install-ADDS
     Install-ADDSForest -Password $(ConvertTo-SecureString $config.safeModeAdministratorPassword -AsPlainText -Force) -Domain $config.domainName
+    Enable-ADRecycleBin -Domain $config.domainName
     Install-hMailServer
 }

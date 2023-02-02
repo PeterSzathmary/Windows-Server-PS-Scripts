@@ -8,7 +8,7 @@
     "safeModeAdministratorPassword": "IWillNeverUseIt_123",
     "dhcpScopes": [
         {
-            "name": "Students3v",
+            "name": "Students",
             "startRange": "10.0.0.30",
             "endRange": "10.0.0.60",
             "subnetMask": "255.255.255.0",
@@ -17,6 +17,7 @@
         }
     ],
     "ouStudents": "Students",
+    "defaultPasswordForStudents": "ChangeMe123",
     "adGroups": [
         {
             "groupName": "SWOT Developers",

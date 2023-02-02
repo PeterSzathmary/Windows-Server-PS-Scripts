@@ -1,8 +1,10 @@
 . .\Restart-ScriptAtStartup.ps1
 
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
+        Justification = 'variable will be used later')]
 $config = (Get-Content ".\config.json" -Raw) | ConvertFrom-Json
-$config.psobject.properties.name
-$config.domainName
+#$config.psobject.properties.name
+#$config.domainName
 
 # this array will hold all developers in the team
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',

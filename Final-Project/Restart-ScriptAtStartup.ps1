@@ -8,12 +8,10 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Restart-ScriptAtStartup -Path "C:\Users\Administrator\Desktop\script.ps1"
+    Restart-ScriptAtStartup -Path "absolute_path_to_script_file"
 
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
-
-
 function Restart-ScriptAtStartup {
     [CmdletBinding()]
     param (
@@ -27,15 +25,31 @@ function Restart-ScriptAtStartup {
     )
     
     begin {
+        # test if the subkey MyFlags doesn't exist in SOFTWARE subkey
+        if (!(Test-Path -Path "HKLM:\SOFTWARE\MyFlags")) {
+            # create one if it doesn't exist
+            New-Item -Path "HKLM:\SOFTWARE" -Name "MyFlags"
+        }
+        #it exists, so skip creating subkey MyFlags
+        else {
+            # get the subkey
+            $Key = Get-Item -LiteralPath "HKLM:\SOFTWARE\MyFlags"
+
+            if ($Key.GetValue("StartAtLogon", $null) -eq $null) {
+                New-ItemProperty -Path "HKLM:\Software\MyFlags" -Name "StartAtLogon" -Value 1
+            }
+            else {
+                Write-Host "Flag is already created." -ForegroundColor Yellow
+                break
+            }
+        }
+
         
     }
     
     process {
-        # if flags doesn't exists, create them
-        # it starts the script after logging into OS
-        if (!(Test-Path -Path "HKLM:\SOFTWARE\MyFlags")) {
-            New-Item -Path "HKLM:\SOFTWARE" -Name "MyFlags"
-            New-ItemProperty -Path "HKLM:\Software\MyFlags" -Name "StartAtLogon" -Value 1
+        if (!$Key.GetValue("StartAtLogon", $null) -ne $null) {
+            
             New-Item `
                 -Path "C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" `
                 -Name "startup.cmd" `
@@ -45,6 +59,6 @@ function Restart-ScriptAtStartup {
     }
     
     end {
-            
+            Write-Host "Flag for starting up the script successfully created." -ForegroundColor Green
     }
 }#Restart-ScriptAtStartup

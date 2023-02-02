@@ -27,14 +27,15 @@ function Rename-ThisComputer {
     )
     
     begin {
-        if (Test-Path "C:\computer_renamed") {
+        $Flag = "computer_renamed"
+        if (Test-Path "C:\$Flag") {
             Write-Host "Computer is already renamed" -ForegroundColor Yellow
             break
         }
     }
     
     process {
-        New-Item -Path "C:\" -Name "computer_renamed" -ItemType File
+        New-Item -Path "C:\" -Name $Flag -ItemType File
     
         Start-Sleep -Seconds 5
 

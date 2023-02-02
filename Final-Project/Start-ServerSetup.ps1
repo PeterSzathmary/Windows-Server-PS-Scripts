@@ -8,6 +8,7 @@
 . .\Install-7Zip.ps1
 . .\Install-Chocolatey.ps1
 . .\Install-ChromeBeta.ps1
+. .\Install-ChromeDriver.ps1
 
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
         Justification = 'variable will be used later')]
@@ -32,4 +33,5 @@ Show-FileExtensions
 Install-7Zip
 Install-Chocolatey
 Install-ChromeBeta
+Install-ChromeDriver
 Rename-ThisComputer -Name $config.computerName

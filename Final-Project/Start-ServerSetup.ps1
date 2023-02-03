@@ -79,4 +79,8 @@ if (Test-Path "C:\computer_renamed") {
     if (Test-Path "C:\oracle_enterprise_downloaded") {
         Install-OracleEnterpriseDB -DBResponseFilePath ".\db.rsp"
     }
+
+    if (Test-Path "C:\oracle_enterprise_installed") {
+        
+    }
 }

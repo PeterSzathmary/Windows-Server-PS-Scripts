@@ -24,6 +24,7 @@
 . .\Add-DNSRecords.ps1
 . .\Set-hMailServer.ps1
 . .\Get-OracleEnterpriseDB.ps1
+. .\Install-OracleEnterpriseDB.ps1
 
 Import-Module .\classes\DHCPScope.ps1
 
@@ -75,4 +76,7 @@ if (Test-Path "C:\computer_renamed") {
     Install-hMailServer
     Set-hMailServer -DomainName $config.domainName -SMTPBindToIP $config.staticIP
     Get-OracleEnterpriseDB
+    if (Test-Path "C:\oracle_enterprise_downloaded") {
+        Install-OracleEnterpriseDB -DBResponseFilePath ".\db.rsp"
+    }
 }

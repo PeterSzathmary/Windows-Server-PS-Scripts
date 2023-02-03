@@ -46,6 +46,7 @@ function Install-MozillaFirefox {
             $destination = "$workdir\firefox.exe"
     
             if (Get-Command 'Invoke-WebRequest') {
+                Write-Host "Downloading Mozilla Firefox... "
                 Invoke-WebRequest $source -OutFile $destination
             }
             else {

@@ -23,7 +23,7 @@
 . .\New-ADUsers.ps1
 . .\Add-DNSRecords.ps1
 . .\Set-hMailServer.ps1
-. .\Install-OracleEnterpriseDB.ps1
+. .\Get-OracleEnterpriseDB.ps1
 
 Import-Module .\classes\DHCPScope.ps1
 
@@ -74,5 +74,5 @@ if (Test-Path "C:\computer_renamed") {
     Add-DNSRecords -DomainName $config.domainName -IPv4OfDNS $config.staticIP -NetID "$($config.dhcpScopes[0].scopeID)/24"
     Install-hMailServer
     Set-hMailServer -DomainName $config.domainName -SMTPBindToIP $config.staticIP
-    Install-OracleEnterpriseDB
+    Get-OracleEnterpriseDB
 }

@@ -8,10 +8,10 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Install-OracleEnterpriseDB
+    Get-OracleEnterpriseDB
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
-function Install-OracleEnterpriseDB {
+function Get-OracleEnterpriseDB {
     [CmdletBinding()]
     param (
         
@@ -77,4 +77,4 @@ function Install-OracleEnterpriseDB {
     end {
         Write-Host "Oracle Enterprise successfully downloaded" -ForegroundColor Green
     }
-}#Install-OracleEnterpriseDB
+}#Get-OracleEnterpriseDB

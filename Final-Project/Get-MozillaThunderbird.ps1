@@ -23,23 +23,27 @@ function Get-MozillaThunderbird {
         $Flag = "mozillaThunderbird_downloaded"
         if (Test-Path "C:\$Flag") {
             Write-Host "Mozilla Thunderbird already downloaded" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $url = "https://download.mozilla.org/?product=thunderbird-102.6.1-SSL&os=win64&lang=en-US"
-        $output = "C:\Users\Administrator\Downloads\mozillaThunderbird.exe"
-        $start_time = Get-Date
+        if ($Skip -ne $true) {
+            $url = "https://download.mozilla.org/?product=thunderbird-102.6.1-SSL&os=win64&lang=en-US"
+            $output = "C:\Users\Administrator\Downloads\mozillaThunderbird.exe"
+            $start_time = Get-Date
 
-        Invoke-WebRequest -Uri $url -OutFile $output
+            Invoke-WebRequest -Uri $url -OutFile $output
 
-        Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
+            Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "Mozilla Thunderbird successfully downloaded" -ForegroundColor Yellow
+        if ($Skip -ne $true) {
+            Write-Host "Mozilla Thunderbird successfully downloaded" -ForegroundColor Yellow
+        }
     }
 }#Get-MozillaThunderbird

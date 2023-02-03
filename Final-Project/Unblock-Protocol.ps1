@@ -29,18 +29,22 @@ function Unblock-Protocol {
     begin {
         if (Test-Path "C:\allow_$Protocol") {
             Write-Host "Protocol $Protocol already unblocked in both IN and OUT directions." -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        New-NetFirewallRule -DisplayName "Allow $Protocol In Requests" -Direction Inbound -Program Any -Protocol $Protocol -Action Allow
-        New-NetFirewallRule -DisplayName "Allow $Protocol Out Requests" -Direction Outbound -Program Any -Protocol $Protocol -Action Allow
+        if ($Skip -ne $true) {
+            New-NetFirewallRule -DisplayName "Allow $Protocol In Requests" -Direction Inbound -Program Any -Protocol $Protocol -Action Allow
+            New-NetFirewallRule -DisplayName "Allow $Protocol Out Requests" -Direction Outbound -Program Any -Protocol $Protocol -Action Allow
     
-        New-Item -Path "C:\" -Name "allow_$Protocol" -ItemType File
+            New-Item -Path "C:\" -Name "allow_$Protocol" -ItemType File
+        }
     }
     
     end {
-        Write-Host "Protocol $Protocol successfully enabled." -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "Protocol $Protocol successfully enabled." -ForegroundColor Green
+        }
     }
 }#Unblock-Protocol

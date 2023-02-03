@@ -45,29 +45,33 @@ function Install-DHCP {
         $Flag = "dhcp_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "DHCP already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        Install-WindowsFeature DHCP -IncludeManagementTools
-        Add-DhcpServerInDC -DnsName $Domain -IPAddress $StaticIP
-        Add-DhcpServerSecurityGroup
-        Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\ServerManager\Roles\12 -Name ConfigurationState -Value 2
-        Restart-Service -Name DHCPServer -Force
+        if ($Skip -ne $true) {
+            Install-WindowsFeature DHCP -IncludeManagementTools
+            Add-DhcpServerInDC -DnsName $Domain -IPAddress $StaticIP
+            Add-DhcpServerSecurityGroup
+            Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\ServerManager\Roles\12 -Name ConfigurationState -Value 2
+            Restart-Service -Name DHCPServer -Force
 
-        # Configuration
-        Import-Module DHCPServer
-        # Create new inactive scope
-        Add-DhcpServerv4Scope -Name $DHCPscope.Name -StartRange $DHCPscope.StartRange -EndRange $DHCPscope.EndRange -SubnetMask $DHCPscope.SubnetMask -State InActive
-        Set-DhcpServerv4OptionValue -ScopeID $DHCPscope.ScopeID -DnsDomain $Domain -DnsServer $DHCPscope.DnsServer # -Router 192.168.113.1
-        # Activate
-        Set-DhcpServerv4Scope -ScopeID $DHCPscope.ScopeID -State Active
+            # Configuration
+            Import-Module DHCPServer
+            # Create new inactive scope
+            Add-DhcpServerv4Scope -Name $DHCPscope.Name -StartRange $DHCPscope.StartRange -EndRange $DHCPscope.EndRange -SubnetMask $DHCPscope.SubnetMask -State InActive
+            Set-DhcpServerv4OptionValue -ScopeID $DHCPscope.ScopeID -DnsDomain $Domain -DnsServer $DHCPscope.DnsServer # -Router 192.168.113.1
+            # Activate
+            Set-DhcpServerv4Scope -ScopeID $DHCPscope.ScopeID -State Active
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "DHCP successfully installed" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "DHCP successfully installed" -ForegroundColor Green
+        }
     }
 }#Install-DHCP

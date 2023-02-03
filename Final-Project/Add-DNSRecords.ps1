@@ -43,24 +43,28 @@ function Add-DNSRecords {
         $Flag = "dns_configured"
         if (Test-Path "C:\$Flag") {
             Write-Host "DNS already configured" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        # 1. create record A (@) point to IP server
-        Add-DnsServerResourceRecordA -Name "mail" -ZoneName $DomainName -IPv4Address $IPv4OfDNS
-        # MX record
-        Add-DnsServerResourceRecordMX -Preference 10  -Name $DomainName -MailExchange "mail.$DomainName" -ZoneName $DomainName
-        # add reverse lookup zone primary
-        Add-DnsServerPrimaryZone -NetworkID $NetID -ReplicationScope "Forest"
-        # reverse PTR records
-        # TODO: fix (it doesn't set correct Name in DNS like this: 10.0.0.1)
-        # Add-DnsServerResourceRecordPtr -Name "10" -ZoneName "0.0.10.in-addr.arpa" -PtrDomainName "WIN-DC-001.windows.lab"
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+        if ($Skip -ne $true) {
+            # 1. create record A (@) point to IP server
+            Add-DnsServerResourceRecordA -Name "mail" -ZoneName $DomainName -IPv4Address $IPv4OfDNS
+            # MX record
+            Add-DnsServerResourceRecordMX -Preference 10  -Name $DomainName -MailExchange "mail.$DomainName" -ZoneName $DomainName
+            # add reverse lookup zone primary
+            Add-DnsServerPrimaryZone -NetworkID $NetID -ReplicationScope "Forest"
+            # reverse PTR records
+            # TODO: fix (it doesn't set correct Name in DNS like this: 10.0.0.1)
+            # Add-DnsServerResourceRecordPtr -Name "10" -ZoneName "0.0.10.in-addr.arpa" -PtrDomainName "WIN-DC-001.windows.lab"
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "DNS successfully configured" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "DNS successfully configured" -ForegroundColor Green
+        }
     }
 }#Add-DNSRecords

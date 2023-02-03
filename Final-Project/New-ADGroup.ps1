@@ -11,8 +11,6 @@
     New-ADGroup -GroupName "SWOT Developers" -GroupDescription "Members of this group are SWOT Developers"
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
-
-
 function New-ADGroup {
     [CmdletBinding()]
     param (
@@ -37,27 +35,31 @@ function New-ADGroup {
         $Flag = "ad_group_$($GroupName)_created"
         if (Test-Path "C:\$Flag") {
             Write-Host "AD group $GroupName already created" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $forest = Get-ADDomain | Select-Object -ExpandProperty Forest
-        $arr = $forest.Split(".")
+        if ($Skip -ne $true) {
+            $forest = Get-ADDomain | Select-Object -ExpandProperty Forest
+            $arr = $forest.Split(".")
         
-        New-ADGroup `
-            -Name $GroupName `
-            -SamAccountName $GroupName `
-            -GroupCategory Security `
-            -GroupScope Global `
-            -DisplayName $GroupName `
-            -Path "CN=Users,DC=$($arr[0]),DC=$($arr[1])" `
-            -Description $GroupDescription
+            New-ADGroup `
+                -Name $GroupName `
+                -SamAccountName $GroupName `
+                -GroupCategory Security `
+                -GroupScope Global `
+                -DisplayName $GroupName `
+                -Path "CN=Users,DC=$($arr[0]),DC=$($arr[1])" `
+                -Description $GroupDescription
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "AD group $GroupName already created" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "AD group $GroupName already created" -ForegroundColor Green
+        }
     }
 }#New-ADGroup

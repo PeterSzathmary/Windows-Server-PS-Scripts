@@ -14,8 +14,6 @@
     Disable-MapsBroker
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
-
-
 function Disable-MapsBroker {
     [CmdletBinding()]
     param (
@@ -25,17 +23,21 @@ function Disable-MapsBroker {
     begin {
         if (Test-Path "C:\maps_broker_disabled") {
             Write-Host "MapsBroker already disabled." -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        Get-Service -Name MapsBroker | Set-Service -StartupType Disabled -Confirm:$false
-        Write-Host "Turning off maps broker..."
-        New-Item -Path "C:\" -Name "maps_broker_disabled" -ItemType File
+        if ($Skip -ne $true) {
+            Get-Service -Name MapsBroker | Set-Service -StartupType Disabled -Confirm:$false
+            Write-Host "Turning off maps broker..."
+            New-Item -Path "C:\" -Name "maps_broker_disabled" -ItemType File
+        }
     }
     
     end {
-        Write-Host "MapsBroker successfully disabled." -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "MapsBroker successfully disabled." -ForegroundColor Green
+        }
     }
 }#Disable-MapsBroker

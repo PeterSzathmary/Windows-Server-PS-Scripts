@@ -40,7 +40,7 @@ function Restart-ScriptAtStartup {
             }
             else {
                 Write-Host "Flag is already created." -ForegroundColor Yellow
-                break
+                $Skip = $True
             }
         }
 
@@ -48,14 +48,18 @@ function Restart-ScriptAtStartup {
     }
     
     process {
+        if ($Skip -ne $true) {
             New-Item `
                 -Path "C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" `
                 -Name "startup.cmd" `
                 -ItemType "file" `
                 -Value "start powershell -noexit -file '$Path'"
+        }
     }
     
     end {
+        if ($Skip -ne $true) {
             Write-Host "Flag for starting up the script successfully created." -ForegroundColor Green
+        }
     }
 }#Restart-ScriptAtStartup

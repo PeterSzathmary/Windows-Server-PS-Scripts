@@ -27,20 +27,24 @@ function New-OU {
         $Flag = "ou_students_created"
         if (Test-Path "C:\$Flag") {
             Write-Host "OU $Name already created" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $forest = Get-ADDomain | Select-Object -ExpandProperty Forest
-        $arr = $forest.Split(".")
+        if ($Skip -ne $true) {
+            $forest = Get-ADDomain | Select-Object -ExpandProperty Forest
+            $arr = $forest.Split(".")
 
-        New-ADOrganizationalUnit -Name $Name -Path "DC=$($arr[0].ToUpper()),DC=$($arr[1].ToUpper())" -ProtectedFromAccidentalDeletion $false
+            New-ADOrganizationalUnit -Name $Name -Path "DC=$($arr[0].ToUpper()),DC=$($arr[1].ToUpper())" -ProtectedFromAccidentalDeletion $false
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "OU $Name successfully created" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "OU $Name successfully created" -ForegroundColor Green
+        }
     }
 }#New-OU

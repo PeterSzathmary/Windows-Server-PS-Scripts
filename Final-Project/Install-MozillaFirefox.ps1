@@ -27,42 +27,46 @@ function Install-MozillaFirefox {
     begin {
         if (Test-Path "C:\firefox_installed") {
             Write-Host "Firefox already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $workdir = "C:\installer\"
+        if ($Skip -ne $true) {
+            $workdir = "C:\installer\"
     
-        if (Test-Path -Path $workdir -PathType Container) {
-            Write-Host "$workdir already exists" -ForegroundColor Red
+            if (Test-Path -Path $workdir -PathType Container) {
+                Write-Host "$workdir already exists" -ForegroundColor Red
+            }
+            else {
+                New-Item -Path $workdir  -ItemType directory
+            }
+    
+            $source = "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US"
+            $destination = "$workdir\firefox.exe"
+    
+            if (Get-Command 'Invoke-WebRequest') {
+                Invoke-WebRequest $source -OutFile $destination
+            }
+            else {
+                $WebClient = New-Object System.Net.WebClient
+                $webclient.DownloadFile($source, $destination)
+            }
+    
+            Start-Process -FilePath "$workdir\firefox.exe" -ArgumentList "/S"
+    
+            Start-Sleep -s $SleepTime
+    
+            Remove-Item -Force $workdir/firefox*
+            Remove-Item "C:\installer"
+    
+            New-Item -Path "C:\" -Name "firefox_installed" -ItemType File
         }
-        else {
-            New-Item -Path $workdir  -ItemType directory
-        }
-    
-        $source = "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US"
-        $destination = "$workdir\firefox.exe"
-    
-        if (Get-Command 'Invoke-WebRequest') {
-            Invoke-WebRequest $source -OutFile $destination
-        }
-        else {
-            $WebClient = New-Object System.Net.WebClient
-            $webclient.DownloadFile($source, $destination)
-        }
-    
-        Start-Process -FilePath "$workdir\firefox.exe" -ArgumentList "/S"
-    
-        Start-Sleep -s $SleepTime
-    
-        Remove-Item -Force $workdir/firefox*
-        Remove-Item "C:\installer"
-    
-        New-Item -Path "C:\" -Name "firefox_installed" -ItemType File
     }
     
     end {
-        Write-Host "Firefox installed successfully." -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "Firefox installed successfully." -ForegroundColor Green
+        }
     }
 }#Install-MozillaFirefox

@@ -21,16 +21,20 @@ function Install-ChromeDriver {
         $Flag = "chrome_driver_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "Chrome driver already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        choco install selenium-chrome-driver --force -y # c:\tools\selenium
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+        if ($Skip -ne $true) {
+            choco install selenium-chrome-driver --force -y # c:\tools\selenium
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "Chrome driver successfully installed" -ForegroundColor Yellow
+        if ($Skip -ne $true) {
+            Write-Host "Chrome driver successfully installed" -ForegroundColor Yellow
+        }
     }
 }#Install-ChromeDriver

@@ -21,23 +21,27 @@ function Get-hMailServer {
         $Flag = "hMailServer_downloaded"
         if (Test-Path "C:\$Flag") {
             Write-Host "hMailServer already downloaded" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $url = "https://www.hmailserver.com/files/hMailServer-5.6.8-B2574.exe"
-        $output = "C:\Users\Administrator\Downloads\hMailServer_setup.exe"
-        $start_time = Get-Date
+        if ($Skip -ne $true) {
+            $url = "https://www.hmailserver.com/files/hMailServer-5.6.8-B2574.exe"
+            $output = "C:\Users\Administrator\Downloads\hMailServer_setup.exe"
+            $start_time = Get-Date
 
-        Invoke-WebRequest -Uri $url -OutFile $output
+            Invoke-WebRequest -Uri $url -OutFile $output
 
-        Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
+            Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "hMailServer successfully downloaded" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "hMailServer successfully downloaded" -ForegroundColor Green
+        }
     }
 }#Get-hMailServer

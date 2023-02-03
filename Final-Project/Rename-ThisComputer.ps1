@@ -8,7 +8,7 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Rename-ThisComputer -Name "WIN10"
+    Rename-ThisComputer -ComputerName "WIN10"
     
     Renames the computer to WIN10
 #>
@@ -30,19 +30,23 @@ function Rename-ThisComputer {
         $Flag = "computer_renamed"
         if (Test-Path "C:\$Flag") {
             Write-Host "Computer is already renamed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+        if ($Skip -ne $true) {
+            New-Item -Path "C:\" -Name $Flag -ItemType File
     
-        Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 5
 
-        Rename-Computer -NewName $ComputerName -Restart
+            Rename-Computer -NewName $ComputerName -Restart
+        }
     }
     
     end {
-        Write-Host "Computer renamed successfully." -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "Computer renamed successfully." -ForegroundColor Green
+        }
     }
 }#Rename-ThisComputer

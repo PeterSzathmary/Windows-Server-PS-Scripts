@@ -29,19 +29,23 @@ function Enable-ADRecycleBin {
         $Flag = "ad_recycle_bin_enabled"
         if (Test-Path "C:\$Flag") {
             Write-Host "AD Recycle bin already enabled" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $computerName = hostname.exe
+        if ($Skip -ne $true) {
+            $computerName = hostname.exe
 
-        Enable-ADOptionalFeature -Identity "Recycle Bin Feature" -Scope ForestOrConfigurationSet -Target $Domain -Server $computerName -Confirm:$false
+            Enable-ADOptionalFeature -Identity "Recycle Bin Feature" -Scope ForestOrConfigurationSet -Target $Domain -Server $computerName -Confirm:$false
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "AD Recycle bin successfully enabled" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "AD Recycle bin successfully enabled" -ForegroundColor Green
+        }
     }
 }#Enable-ADRecycleBin

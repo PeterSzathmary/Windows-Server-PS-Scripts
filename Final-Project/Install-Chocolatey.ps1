@@ -21,19 +21,23 @@ function Install-Chocolatey {
         $Flag = "chocolatey_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "Chocolatey already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        Set-ExecutionPolicy Bypass -Scope Process -Force
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        if ($Skip -ne $true) {
+            Set-ExecutionPolicy Bypass -Scope Process -Force
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+            Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "Chocolatey installed successfully" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "Chocolatey installed successfully" -ForegroundColor Green
+        }
     }
 }#Install-Chocolatey

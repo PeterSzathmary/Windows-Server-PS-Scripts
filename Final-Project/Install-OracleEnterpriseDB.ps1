@@ -27,39 +27,42 @@ function Install-OracleEnterpriseDB {
         $Flag = "oracle_enterprise_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "Oracle Enterprise DB already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $oracleDBProductPath = "C:\app\19c\product"
-        $oracleDBBasePath = "C:\app\19c\base"
+        if ($Skip -ne $true) {
+            $oracleDBProductPath = "C:\app\19c\product"
+            $oracleDBBasePath = "C:\app\19c\base"
 
-        New-Item -ItemType Directory -Force -Path $oracleDBProductPath
-        New-Item -ItemType Directory -Force -Path $oracleDBBasePath
+            New-Item -ItemType Directory -Force -Path $oracleDBProductPath
+            New-Item -ItemType Directory -Force -Path $oracleDBBasePath
 
-        #extract archive to c -> app -> 19c -> product
-        Write-Host -ForegroundColor Magenta "Wait until the download process of Oracle DB is finished. Start Expanding? Press ENTER to continue... " -NoNewline
-        Read-Host
-        Expand-Archive "C:\Users\Administrator\Downloads\WINDOWS.X64_193000_db_home.zip" -DestinationPath $oracleDBProductPath
+            #extract archive to c -> app -> 19c -> product
+            Write-Host -ForegroundColor Magenta "Wait until the download process of Oracle DB is finished. Start Expanding? Press ENTER to continue... " -NoNewline
+            Read-Host
+            Expand-Archive "C:\Users\Administrator\Downloads\WINDOWS.X64_193000_db_home.zip" -DestinationPath $oracleDBProductPath
 
-        #C:\app\19c\product\bin to path # should be already there
+            #C:\app\19c\product\bin to path # should be already there
 
-        #C:\app\19c\product\setup.exe /s /v"RSP_FILE=C:\Users\Administrator\Desktop\db.rsp" /v"/L*v C:\Users\Administrator\Desktop\setup.log" /v"/qn"
-        if (Test-Path $DBResponseFilePath) {
-            C:\app\19c\product\setup.exe -silent -responseFile $DBResponseFilePath
-            New-Item -Path "C:\" -Name $Flag -ItemType File
+            #C:\app\19c\product\setup.exe /s /v"RSP_FILE=C:\Users\Administrator\Desktop\db.rsp" /v"/L*v C:\Users\Administrator\Desktop\setup.log" /v"/qn"
+            if (Test-Path $DBResponseFilePath) {
+                C:\app\19c\product\setup.exe -silent -responseFile $DBResponseFilePath
+                New-Item -Path "C:\" -Name $Flag -ItemType File
+            }
+            else {
+                Write-Host "Response file is not FOUND!" -ForegroundColor Red
+                Start-Sleep -Seconds 10
+            }
+
+            # set ORACLE_HOME
         }
-        else {
-            Write-Host "Response file is not FOUND!"
-            Start-Sleep -Seconds 10
-            Exit
-        }
-
-        # set ORACLE_HOME
     }
     
     end {
-        Write-Host "Oracle Enterprise DB successfully installed" -ForegroundColor Yellow
+        if ($Skip -ne $true) {
+            Write-Host "Oracle Enterprise DB successfully installed" -ForegroundColor Yellow
+        }
     }
 }#Install-OracleEnterpriseDB

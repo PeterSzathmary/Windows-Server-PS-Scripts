@@ -21,19 +21,23 @@ function Install-hMailServer {
         $Flag = "hMailServer_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "hMailServer already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        #Start-Process -FilePath "C:\Users\Administrator\Downloads\hMailServer_setup.exe" -Verb RunAs -ArgumentList "/verysilent","/password=$hMailAdminPassword" -PassThru -NoNewWindow -Wait
-        C:\Users\Administrator\Downloads\hMailServer_setup.exe /silent
-        #Invoke-Command -ScriptBlock $pathvargs
+        if ($Skip -ne $true) {
+            #Start-Process -FilePath "C:\Users\Administrator\Downloads\hMailServer_setup.exe" -Verb RunAs -ArgumentList "/verysilent","/password=$hMailAdminPassword" -PassThru -NoNewWindow -Wait
+            C:\Users\Administrator\Downloads\hMailServer_setup.exe /silent
+            #Invoke-Command -ScriptBlock $pathvargs
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "hMailServer successfully installed" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "hMailServer successfully installed" -ForegroundColor Green
+        }
     }
 }#Install-hMailServer

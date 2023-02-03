@@ -21,17 +21,21 @@ function Install-NETFramework {
         $Flag = "netFrameWork_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "NET Framework Core already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        Install-WindowsFeature Net-Framework-Core
+        if ($Skip -ne $true) {
+            Install-WindowsFeature Net-Framework-Core
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "NET Framework Core successfully installed" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "NET Framework Core successfully installed" -ForegroundColor Green
+        }
     }
 }#Install-NETFramework

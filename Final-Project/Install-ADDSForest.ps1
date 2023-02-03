@@ -35,19 +35,23 @@ function Install-ADDSForest {
         $Flag = "forest_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "AD DS Forest already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        #$secureString = ConvertTo-SecureString $Password -AsPlainText -Force
-        #$domain = $domainName
-        Install-ADDSforest -DomainName $Domain -InstallDns -SafeModeAdministratorPassword $Password -Confirm:$false
+        if ($Skip -ne $true) {
+            #$secureString = ConvertTo-SecureString $Password -AsPlainText -Force
+            #$domain = $domainName
+            Install-ADDSforest -DomainName $Domain -InstallDns -SafeModeAdministratorPassword $Password -Confirm:$false
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "AD DS Forest successfully installed" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "AD DS Forest successfully installed" -ForegroundColor Green
+        }
     }
 }#Install-ADDSForest

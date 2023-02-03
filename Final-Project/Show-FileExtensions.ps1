@@ -23,21 +23,25 @@ function Show-FileExtensions {
         $Flag = "firefox_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "File extensions already enabled" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        Push-Location
-        Set-Location HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-        Set-ItemProperty . HideFileExt "0"
-        Pop-Location
-        Stop-Process -processName: Explorer -force # This will restart the Explorer service to make this work.
+        if ($Skip -ne $true) {
+            Push-Location
+            Set-Location HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+            Set-ItemProperty . HideFileExt "0"
+            Pop-Location
+            Stop-Process -processName: Explorer -force # This will restart the Explorer service to make this work.
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "File extensions successfully enabled" -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "File extensions successfully enabled" -ForegroundColor Green
+        }
     }
 }#Show-FileExtensions

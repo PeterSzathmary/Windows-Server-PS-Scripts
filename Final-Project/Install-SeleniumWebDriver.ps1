@@ -23,23 +23,27 @@ function Install-SeleniumWebDriver {
         $Flag = "selenium_webdriver_dll_downloaded"
         if (Test-Path "C:\$Flag") {
             Write-Host "Selenium web driver already installed." -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        $url = "https://www.nuget.org/api/v2/package/Selenium.WebDriver/4.5.1"
-        $out = "C:\Users\Administrator\Downloads\selenium_webdriver.zip"
+        if ($Skip -ne $true) {
+            $url = "https://www.nuget.org/api/v2/package/Selenium.WebDriver/4.5.1"
+            $out = "C:\Users\Administrator\Downloads\selenium_webdriver.zip"
 
-        Invoke-WebRequest -Uri $url -OutFile $out
-        Expand-Archive "C:\Users\Administrator\Downloads\selenium_webdriver.zip" -DestinationPath "C:\Users\Administrator\Downloads\selenium_webdriver"
+            Invoke-WebRequest -Uri $url -OutFile $out
+            Expand-Archive "C:\Users\Administrator\Downloads\selenium_webdriver.zip" -DestinationPath "C:\Users\Administrator\Downloads\selenium_webdriver"
 
-        Copy-Item -Path "C:\Users\Administrator\Downloads\selenium_webdriver\lib\net48\WebDriver.dll" -Destination "C:\tools\selenium"
+            Copy-Item -Path "C:\Users\Administrator\Downloads\selenium_webdriver\lib\net48\WebDriver.dll" -Destination "C:\tools\selenium"
 
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "Selenium web driver successfully installed." -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "Selenium web driver successfully installed." -ForegroundColor Green
+        }
     }
 }#Install-SeleniumWebDriver

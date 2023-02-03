@@ -27,36 +27,40 @@ function Set-StaticIP {
     begin {
         if (Test-Path "C:\static_ip") {
             Write-Host "Static IP already configured." -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        Get-NetIPConfiguration
+        if ($Skip -ne $true) {
+            Get-NetIPConfiguration
 
-        $width = [Console]::WindowWidth
-        Write-Host ("-" * $width + "`n")
+            $width = [Console]::WindowWidth
+            Write-Host ("-" * $width + "`n")
 
-        Write-Host "Please enter below which interface you want to configure"
-        $interfaceIndex = Read-Host "Choose the interface index (-1 for exit)"
+            Write-Host "Please enter below which interface you want to configure"
+            $interfaceIndex = Read-Host "Choose the interface index (-1 for exit)"
 
-        if ($interfaceIndex -ne -1) {
-            $ip = $StaticIP
-            $primaryDNS = $StaticIP
-            $secondaryDNS = ""
+            if ($interfaceIndex -ne -1) {
+                $ip = $StaticIP
+                $primaryDNS = $StaticIP
+                $secondaryDNS = ""
     
-            Start-Sleep 3
-            #Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\Tcpip\Parameters\Interfaces\$((Get-NetAdapter -InterfaceIndex 10).InterfaceGuid)" -Name EnableDHCP -Value 0
-            New-NetIPAddress -IPAddress $ip -PrefixLength 24 -InterfaceIndex $interfaceIndex
+                Start-Sleep 3
+                #Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\Tcpip\Parameters\Interfaces\$((Get-NetAdapter -InterfaceIndex 10).InterfaceGuid)" -Name EnableDHCP -Value 0
+                New-NetIPAddress -IPAddress $ip -PrefixLength 24 -InterfaceIndex $interfaceIndex
 
-            Start-Sleep 3
-            Set-DnsClientServerAddress -InterfaceIndex $interfaceIndex -ServerAddresses ($primaryDNS, $secondaryDNS)
+                Start-Sleep 3
+                Set-DnsClientServerAddress -InterfaceIndex $interfaceIndex -ServerAddresses ($primaryDNS, $secondaryDNS)
+            }
+    
+            New-Item -Path "C:\" -Name "static_ip" -ItemType File
         }
-    
-        New-Item -Path "C:\" -Name "static_ip" -ItemType File
     }
     
     end {
-        Write-Host "Static IP configured successfully." -ForegroundColor Green
+        if ($Skip -ne $true) {
+            Write-Host "Static IP configured successfully." -ForegroundColor Green
+        }
     }
 }#Set-StaticIP

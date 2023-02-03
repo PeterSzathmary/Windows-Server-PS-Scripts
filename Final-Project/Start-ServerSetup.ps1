@@ -52,7 +52,7 @@ Install-SeleniumWebDriver
 Install-NETFramework
 Get-hMailServer
 Get-MozillaThunderbird
-Rename-ThisComputer -Name $config.computerName
+Rename-ThisComputer -ComputerName $config.computerName
 
 if (Test-Path "C:\computer_renamed") {
     Install-ADDS

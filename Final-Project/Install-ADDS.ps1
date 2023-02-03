@@ -21,16 +21,20 @@ function Install-ADDS {
         $Flag = "adds_installed"
         if (Test-Path "C:\$Flag") {
             Write-Host "AD DS already installed" -ForegroundColor Yellow
-            break
+            $Skip = $true
         }
     }
     
     process {
-        Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
-        New-Item -Path "C:\" -Name $Flag -ItemType File
+        if ($Skip -ne $true) {
+            Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+            New-Item -Path "C:\" -Name $Flag -ItemType File
+        }
     }
     
     end {
-        Write-Host "AD DS successfully installed" -ForegroundColor Yellow
+        if ($Skip -ne $true) {
+            Write-Host "AD DS successfully installed" -ForegroundColor Yellow
+        }
     }
 }#Install-ADDS

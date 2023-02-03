@@ -8,10 +8,10 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    New-ADGroup -GroupName "SWOT Developers" -GroupDescription "Members of this group are SWOT Developers"
+    New-ADGroup_Custom -GroupName "SWOT Developers" -GroupDescription "Members of this group are SWOT Developers"
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
-function New-ADGroup {
+function New-ADGroup_Custom {
     [CmdletBinding()]
     param (
         # new name for a AD group
@@ -59,7 +59,7 @@ function New-ADGroup {
     
     end {
         if ($Skip -ne $true) {
-            Write-Host "AD group $GroupName already created" -ForegroundColor Green
+            Write-Host "AD group $GroupName succcessfully created" -ForegroundColor Green
         }
     }
-}#New-ADGroup
+}#New-ADGroup_Custom

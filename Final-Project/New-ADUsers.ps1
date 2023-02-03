@@ -8,23 +8,16 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    New-ADUsers -PathToCSV ".\MOCK_DATA.csv" -DefaultPassword $(ConvertTo-SecureString <=some_password=> -AsPlainText -Force) -GroupToJoin "swot_group"
+    New-ADUsers -DefaultPassword $(ConvertTo-SecureString <=some_password=> -AsPlainText -Force) -GroupToJoin "swot_group"
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
 function New-ADUsers {
     [CmdletBinding()]
     param (
-        # path to data csv
-        [Parameter(
-            Position = 0,
-            Mandatory = $true
-        )]
-        [string]
-        $PathToCSV,
 
         # default password for new users
         [Parameter(
-            Position = 1,
+            Position = 0,
             Mandatory = $true
         )]
         [securestring]
@@ -32,7 +25,7 @@ function New-ADUsers {
 
         # group to join swot students
         [Parameter(
-            Position = 2,
+            Position = 1,
             Mandatory = $true
         )]
         [string]
@@ -49,8 +42,9 @@ function New-ADUsers {
     
     process {
         if ($Skip -ne $true) {
+            $mockCSVFilePath = Read-Host "File path to Mock CSV data"
             Write-Host "Creating students..."
-            $students = Import-Csv -Path $PathToCSV
+            $students = Import-Csv -Path $mockCSVFilePath
 
             foreach ($student in $students) {
     

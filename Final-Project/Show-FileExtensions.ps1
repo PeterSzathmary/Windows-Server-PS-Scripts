@@ -20,7 +20,7 @@ function Show-FileExtensions {
     )
     
     begin {
-        $Flag = "firefox_installed"
+        $Flag = "file_extensions_enabled"
         if (Test-Path "C:\$Flag") {
             Write-Host "File extensions already enabled" -ForegroundColor Yellow
             $Skip = $true

@@ -1,5 +1,3 @@
-Import-Module .\classes\DHCPScope.ps1
-
 <#
 .SYNOPSIS
     Install DHCP

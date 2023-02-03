@@ -1,41 +1,46 @@
-. .\Restart-ScriptAtStartup.ps1
-. .\Disable-MapsBroker.ps1
-. .\Set-StaticIP.ps1
-. .\Unblock-Protocol.ps1
-. .\Rename-ThisComputer.ps1
-. .\Install-MozillaFirefox.ps1
-. .\Show-FileExtensions.ps1
-. .\Install-7Zip.ps1
-. .\Install-Chocolatey.ps1
-. .\Install-ChromeBeta.ps1
-. .\Install-ChromeDriver.ps1
-. .\Install-SeleniumWebDriver.ps1
-. .\Get-hMailServer.ps1
-. .\Install-NETFramework.ps1
-. .\Get-MozillaThunderbird.ps1
-. .\Install-hMailServer.ps1
-. .\Install-ADDS.ps1
-. .\Install-ADDSForest.ps1
-. .\Enable-ADRecycleBin.ps1
-. .\Install-DHCP.ps1
-. .\New-OU.ps1
-. .\New-ADGroup.ps1
-. .\New-ADUsers.ps1
-. .\Add-DNSRecords.ps1
-. .\Set-hMailServer.ps1
-. .\Get-OracleEnterpriseDB.ps1
-. .\Install-OracleEnterpriseDB.ps1
+class DHCPScope {
+    [string] $Name
+    [ipaddress] $StartRange
+    [ipaddress] $EndRange
+    [ipaddress] $SubnetMask
+    [ipaddress] $ScopeID
+    [ipaddress] $DnsServer
 
-Import-Module .\classes\DHCPScope.ps1
+    DHCPScope(
+        [string] $Name,
+        [ipaddress] $StartRange,
+        [ipaddress] $EndRange,
+        [ipaddress] $SubnetMask,
+        [ipaddress] $ScopeID,
+        [ipaddress] $DnsServer
+    ) {
+        $this.Name = $Name
+        $this.StartRange = $StartRange
+        $this.EndRange = $EndRange
+        $this.SubnetMask = $SubnetMask
+        $this.ScopeID = $ScopeID
+        $this.DnsServer = $DnsServer
+    }
+}
 
-$config = (Get-Content ".\config.json" -Raw) | ConvertFrom-Json
+# Add every *.ps1 file to PowerShell profile, except Start-ServerSetup.ps1
+if (!(Test-Path $profile)) {
+    New-Item -Path $profile -Force
+    $config = (Get-Content "C:\Users\Administrator\Desktop\Final-Project\config.json" -Raw) | ConvertFrom-Json
+    Get-ChildItem ".\" -recurse | Where-Object { $_.Name -eq "config.json" } | ForEach-Object {
+        Write-Host $_.FullName
+        Add-Content $profile "`$config = (Get-Content `"C:\Users\Administrator\Desktop\Final-Project\config.json`" -Raw) | ConvertFrom-Json"
+    }
+    $excluded = @("Start-ServerSetup.ps1", "DHCPScope.ps1")
+    Get-ChildItem -Exclude $excluded ".\" -recurse | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
+        Write-Host $_.FullName
+        Add-Content $profile ". `"$($_.FullName)`""
+    }
+}
 
-# this array will hold all developers in the team
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'existModuleName',
-    Justification = 'variable will be used later')]
-$swotMembers = @()
+. $profile
 
-Restart-ScriptAtStartup -Path $MyInvocation.MyCommand.Path
+#Restart-ScriptAtStartup
 Disable-MapsBroker
 Set-StaticIP -StaticIP $config.staticIP
 Unblock-Protocol -Protocol "ICMPv4"
@@ -56,7 +61,7 @@ Rename-ThisComputer -ComputerName $config.computerName
 
 if (Test-Path "C:\computer_renamed") {
     Install-ADDS
-    Install-ADDSForest -Password $(ConvertTo-SecureString $config.safeModeAdministratorPassword -AsPlainText -Force) -Domain $config.domainName
+    Install-ADDSForest_Custom -Password $(ConvertTo-SecureString $config.safeModeAdministratorPassword -AsPlainText -Force) -Domain $config.domainName
     Enable-ADRecycleBin -Domain $config.domainName
 
     [DHCPScope]$dhcpScope = [DHCPScope]::new(
@@ -70,14 +75,17 @@ if (Test-Path "C:\computer_renamed") {
 
     Install-DHCP -Domain $config.domainName -StaticIP $config.staticIP -DHCPscope $dhcpScope
     New-OU -Name $config.ouStudents
-    New-ADGroup -GroupName $config.adGroups[0].groupName -GroupDescription $config.adGroups[0].groupDescription
-    New-ADUsers -PathToCSV ".\MOCK_DATA.csv" -DefaultPassword $(ConvertTo-SecureString $config.defaultPasswordForStudents -AsPlainText -Force) -GroupToJoin $config.adGroups[0].groupName
+    New-ADGroup_Custom -GroupName $config.adGroups[0].groupName -GroupDescription $config.adGroups[0].groupDescription
+    New-ADUsers -DefaultPassword $(ConvertTo-SecureString $config.defaultPasswordForStudents -AsPlainText -Force) -GroupToJoin $config.adGroups[0].groupName
     Add-DNSRecords -DomainName $config.domainName -IPv4OfDNS $config.staticIP -NetID "$($config.dhcpScopes[0].scopeID)/24"
     Install-hMailServer
-    Set-hMailServer -DomainName $config.domainName -SMTPBindToIP $config.staticIP
+    . $profile
+    if (Test-Path "C:\hMailServer_installed") {
+        Set-hMailServer -DomainName $config.domainName -SMTPBindToIP $config.staticIP
+    }
     Get-OracleEnterpriseDB
     if (Test-Path "C:\oracle_enterprise_downloaded") {
-        Install-OracleEnterpriseDB -DBResponseFilePath ".\db.rsp"
+        Install-OracleEnterpriseDB
     }
 
     if (Test-Path "C:\oracle_enterprise_installed") {

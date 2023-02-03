@@ -8,10 +8,10 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Install-ADDSForest -Password $(ConvertTo-SecureString <=some_password=> -AsPlainText -Force) -Domain <=some_domain_name=>
+    Install-ADDSForest_Custom -Password $(ConvertTo-SecureString <=some_password=> -AsPlainText -Force) -Domain <=some_domain_name=>
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
-function Install-ADDSForest {
+function Install-ADDSForest_Custom {
     [CmdletBinding()]
     param (
         # safe mode administrator password
@@ -54,4 +54,4 @@ function Install-ADDSForest {
             Write-Host "AD DS Forest successfully installed" -ForegroundColor Green
         }
     }
-}#Install-ADDSForest
+}#Install-ADDSForest_Custom

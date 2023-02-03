@@ -15,13 +15,13 @@
 function Restart-ScriptAtStartup {
     [CmdletBinding()]
     param (
-        # Path to script
-        [Parameter(
-            Position = 0,
-            Mandatory = $true
-        )]
-        [string]
-        $Path
+        # # Path to script
+        # [Parameter(
+        #     Position = 0,
+        #     Mandatory = $true
+        # )]
+        # [string]
+        # $Path
     )
     
     begin {
@@ -49,11 +49,14 @@ function Restart-ScriptAtStartup {
     
     process {
         if ($Skip -ne $true) {
+            $PathToScript = Read-Host "Path to script that will start at every startup"
             New-Item `
                 -Path "C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" `
                 -Name "startup.cmd" `
                 -ItemType "file" `
-                -Value "start powershell -noexit -file '$Path'"
+                -Value "start powershell -noexit -file $PathToScript"
+
+                $Skip = $true
         }
     }
     

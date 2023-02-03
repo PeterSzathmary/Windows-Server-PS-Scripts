@@ -8,19 +8,13 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Install-OracleEnterpriseDB -DBResponseFilePath ".\db.rsp"
+    Install-OracleEnterpriseDB
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
 function Install-OracleEnterpriseDB {
     [CmdletBinding()]
     param (
-        # database response file
-        [Parameter(
-            Position = 0,
-            Mandatory = $true
-        )]
-        [string]
-        $DBResponseFilePath
+        
     )
     
     begin {
@@ -47,6 +41,7 @@ function Install-OracleEnterpriseDB {
             #C:\app\19c\product\bin to path # should be already there
 
             #C:\app\19c\product\setup.exe /s /v"RSP_FILE=C:\Users\Administrator\Desktop\db.rsp" /v"/L*v C:\Users\Administrator\Desktop\setup.log" /v"/qn"
+            $DBResponseFilePath = Read-Host "Path to Oracle response file"
             if (Test-Path $DBResponseFilePath) {
                 C:\app\19c\product\setup.exe -silent -responseFile $DBResponseFilePath
                 New-Item -Path "C:\" -Name $Flag -ItemType File

@@ -34,7 +34,7 @@ function Install-ChromeDriver {
     
     end {
         if ($Skip -ne $true) {
-            Write-Host "Chrome driver successfully installed" -ForegroundColor Yellow
+            Write-Host "Chrome driver successfully installed" -ForegroundColor Green
         }
     }
 }#Install-ChromeDriver

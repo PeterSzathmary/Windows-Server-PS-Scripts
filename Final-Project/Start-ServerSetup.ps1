@@ -21,6 +21,7 @@
 . .\New-OU.ps1
 . .\New-ADGroup.ps1
 . .\New-ADUsers.ps1
+. .\Add-DNSRecords.ps1
 
 Import-Module .\classes\DHCPScope.ps1
 
@@ -68,5 +69,6 @@ if (Test-Path "C:\computer_renamed") {
     New-OU -Name $config.ouStudents
     New-ADGroup -GroupName $config.adGroups[0].groupName -GroupDescription $config.adGroups[0].groupDescription
     New-ADUsers -PathToCSV ".\MOCK_DATA.csv" -DefaultPassword $(ConvertTo-SecureString $config.defaultPasswordForStudents -AsPlainText -Force) -GroupToJoin $config.adGroups[0].groupName
+    Add-DNSRecords -DomainName $config.domainName -IPv4OfDNS $config.staticIP -NetID "$($config.dhcpScopes[0].scopeID)/24"
     Install-hMailServer
 }

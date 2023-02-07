@@ -750,45 +750,45 @@ function Configure_hMailServer {
 }
 
 function Main {
-    ShowFileExtensions
-    DisableMapsBroker
-    SetStaticIP
-    AllowICMPv4
-    AllowIMAP
-    AllowPOP3
-    AllowSMTP
-    InstallFirefox
-    RenameComputer
+    # ShowFileExtensions # mám
+    # DisableMapsBroker # mám
+    # SetStaticIP # mám
+    # AllowICMPv4 # mám
+    # AllowIMAP # mám
+    # AllowPOP3 # mám
+    # AllowSMTP # mám
+    # InstallFirefox # mám
+    # RenameComputer # mám
 
     # Check if computer is renamed
     if (Test-Path "C:\computer_renamed") {
-        InstallADDS
-        InstallForest
-        EnableADRecycleBin
-        InstallDHCP
-        CreateOUStudents
-        CreateNewADUsers
+        # InstallADDS # mám
+        # InstallForest # mám
+        # EnableADRecycleBin # mám
+        # InstallDHCP # mám
+        # CreateOUStudents # mám
+        # CreateNewADUsers # mám
         #CreateGPOProxySettings
-        InstallNETFramework
-        Download_hMailServer
-        DownloadMozillaThunderbird
-        Install7Zip
-        ConfigureDNS
+        # InstallNETFramework # mám
+        # Download_hMailServer # mám
+        # DownloadMozillaThunderbird #mám
+        # Install7Zip # mám
+        # ConfigureDNS # mám
 
-        InstallChocolatey
+        # InstallChocolatey # mám
         #InstallChromeBetaWithChoco # checksum error
-        InstallChromeBetaOfficially
-        InstallChromeDriverWithChoco
-        InstallSeleniumWebDriverDll
+        # InstallChromeBetaOfficially # mám
+        # InstallChromeDriverWithChoco # mám
+        # InstallSeleniumWebDriverDll # mám
         
-        Install_hMailServer
-        Configure_hMailServer
+        # Install_hMailServer # mám
+        # Configure_hMailServer # mám
 
         #DownloadOracleDB
         #DownloadPostgreSql
         # TODO:
         # wait for download oracle db to finish
-        DownloadOracleEnterpriseDB
+        # DownloadOracleEnterpriseDB # mám
         if (Test-Path "C:\oracle_enterprise_downloaded") {
             InstallOracleEnterpriseDB
         }

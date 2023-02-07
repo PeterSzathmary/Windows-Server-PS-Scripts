@@ -89,6 +89,9 @@ if (Test-Path "C:\computer_renamed") {
     }
 
     if (Test-Path "C:\oracle_enterprise_installed") {
-        
+        Invoke-SQLScript -Path "$env:UserProfile\Desktop\Final-Project\SQL\open_db.sql"
+        $swotGroupUsers = Get-ADGroupMember -Identity 'SWOT Developers' -Recursiv | Select-Object -ExpandProperty SamAccountName
+        New-Tablespaces -Users $swotGroupUsers -TablespaceSize "10M"
+        New-OracleUsers -Users $swotGroupUsers
     }
 }

@@ -30,7 +30,7 @@ function Get-MozillaThunderbird {
     process {
         if ($Skip -ne $true) {
             $url = "https://download.mozilla.org/?product=thunderbird-102.6.1-SSL&os=win64&lang=en-US"
-            $output = "C:\Users\Administrator\Downloads\mozillaThunderbird.exe"
+            $output = "$env:UserProfile\Downloads\mozillaThunderbird.exe"
             $start_time = Get-Date
 
             Invoke-WebRequest -Uri $url -OutFile $output

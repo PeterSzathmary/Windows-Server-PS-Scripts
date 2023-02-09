@@ -1,7 +1,6 @@
 # install Thunderbird
 # keep firewall on
 # add to domain
-
 function DownloadMozillaThunderbird{
     if (!(Test-Path "C:\mozillaThunderbird_downloaded")) {
         

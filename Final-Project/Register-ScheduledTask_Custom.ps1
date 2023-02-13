@@ -8,7 +8,7 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Register-ScheduledTask_Custom -PathToScript "C:\script.ps1" -TaskName "Some Script Name"
+    Register-ScheduledTask_Custom -PathToScript "C:\script.ps1" -TaskName "Some Script Name" -At "11:30pm" -Description "some description"
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
 function Register-ScheduledTask_Custom {
@@ -23,12 +23,19 @@ function Register-ScheduledTask_Custom {
         $PathToScript,
 
         # name of the task
+        # cannot contain ":"
+        # add validation for it
         [Parameter(Position = 1, Mandatory = $true)]
         [string]
         $TaskName,
 
+        # when to run the task
+        [Parameter(Position = 2, Mandatory = $true)]
+        [string]
+        $At,
+
         # description of the task
-        [Parameter(Position = 2, Mandatory = $false)]
+        [Parameter(Position = 3, Mandatory = $false)]
         [string]
         $Description
     )
@@ -39,7 +46,7 @@ function Register-ScheduledTask_Custom {
     
     process {
         $Action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument $PathToScript
-        $Trigger = New-ScheduledTaskTrigger -Daily -At 9pm
+        $Trigger = New-ScheduledTaskTrigger -Daily -At $At
         Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName $TaskName -Description $Description
     }
     

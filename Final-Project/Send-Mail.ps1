@@ -8,71 +8,30 @@ function Send-Mail {
     )
     
     begin {
+        # $body= $style + $results
+        # $body | Out-File c:\temp\html.html
+        # $body1= (Get-Content c:\temp\html.html) | out-string 
+        # sendEmail $body1
+        $style = Get-Content "$env:UserProfile\Desktop\Final-Project\test.css" | Out-String
+        # -CssUri "$env:UserProfile\Desktop\Final-Project\test.css"
         $body = ConvertTo-Html -PreContent @"
-        <h2>Folders older than 30 days</h2>
-        <div>
-            Hello, from $($env:USERNAME)
-            <br></br>
-            Location: \\Server01\XFER\Cory
-        </div>
-        <br></br>
-		<style>
-/* --- Required CSS (not customizable) --- */
-
-.tooltip:focus::after,
-.tooltip:hover::after {
-  content: attr(aria-label);
-  display: block;
-}
-
-/* --- Required CSS (customizable) --- */
-
-.tooltip:focus::after,
-.tooltip:hover::after {
-  position: absolute;
-  top: 100%;
-  font-size: 1.2rem;
-  background-color: #f2f2f2;
-  border-radius: 0.5rem;
-  color: initial;
-  padding: 1rem;
-  width: 13rem;
-  margin-top: 0.5rem;
-  text-align: left;
-}
-
-.tooltip {
-  position: relative;
-  color: goldenrod;
-  display: inline-block;
-}
-
-.tooltip:hover::before {
-  top: 100%;
-  right: 0;
-  left: 0;
-  margin: -1rem auto 0;
-  display: block;
-  border: solid transparent;
-  content: "";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-bottom-color: #f2f2f2;
-  border-width: 1rem;
-}
-
-/* --- Codepen styles - not required --- */
-
-body {
-  padding: 4rem 2rem;
-  text-align: center;
-  font-size: 2rem;
-}
-</style>
-
-♕ This is an example of a <a href="#" class="tooltip" aria-label="The tooltip or a hint is a common GUI element that describes the item it's related to.">Tooltip</a>. Click on it to learn more.
+        <html>
+            <head>
+                <style>
+                    $($style)
+                </style>
+            </head>
+            <body>
+                <h2>Folders older than 30 days</h2>
+                <div>
+                    Hello, from $($env:USERNAME)
+                    <br></br>
+                    Location: \\Server01\XFER\Cory
+                </div>
+                <br></br>
+                ♕ This is an example of a <a href="#" class="tooltip" aria-label="The tooltip or a hint is a common GUI element that describes the item it's related to.">Tooltip</a>. Click on it to learn more.
+            </body>
+        </html>
 "@
 
         $mailParams = @{

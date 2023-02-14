@@ -10,7 +10,20 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Send-Mail -To "Ainslee Ash <aash@windows.lab>" -From "Administrator <administrator@windows.lab>" -Subject "hello with HTML" -AttachmentPath "C:\backup_log_13-02-2023-19-15-38.txt"
+    Send-Mail -To "Ainslee Ash <aash@windows.lab>" -From "Administrator <administrator@windows.lab>" -Subject "hello with HTML" -Attachments "C:\backup_log_13-02-2023-19-15-38.txt"
+
+    -- OR --
+
+    send mail with multiple attachments
+
+    Send-Mail -To "Ainslee Ash <aash@windows.lab>" -From "Administrator <administrator@windows.lab>" -Subject "hello with HTML" -Attachments "C:\backup_log_13-02-2023-19-15-38.txt", "C:\schema_report_13-02-2023-18-23-05.txt"
+
+    -- OR --
+
+    send email with no attachments
+
+    Send-Mail -To "Ainslee Ash <aash@windows.lab>" -From "Administrator <administrator@windows.lab>" -Subject "hello with HTML"
+
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
 
@@ -45,15 +58,15 @@ function Send-Mail {
         # attachment
         [Parameter(
             Position = 3,
-            Mandatory = $true
+            Mandatory = $false
         )]
-        [string]
-        $AttachmentPath
+        [string[]]
+        $Attachments
     )
     
     begin {
         $style = Get-Content "$env:UserProfile\Desktop\Final-Project\test.css" | Out-String
-        
+
         $html = Get-Content "$env:UserProfile\Desktop\Final-Project\test.html" | Out-String
         $html = $html.Replace("/*VarStyle*/", $style)
         $html = $html.Replace("**VarUsername**", $($env:USERNAME))
@@ -69,8 +82,11 @@ function Send-Mail {
             Subject     = $Subject
             Body        = $($body | Out-String)
             BodyAsHtml  = $true
-            Attachments = $AttachmentPath
             Encoding    = "UTF8"
+        }
+
+        if ($Attachments) {
+            $mailParams.Attachments = $Attachments
         }
         
     }

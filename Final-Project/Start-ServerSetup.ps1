@@ -23,7 +23,7 @@ class DHCPScope {
     }
 }
 
-# Add every *.ps1 file to PowerShell profile, except Start-ServerSetup.ps1
+# Add every *.ps1 file to PowerShell profile, except $excluded array
 if (!(Test-Path $profile)) {
     New-Item -Path $profile -Force
     $config = (Get-Content "C:\Users\Administrator\Desktop\Final-Project\config.json" -Raw) | ConvertFrom-Json
@@ -32,7 +32,7 @@ if (!(Test-Path $profile)) {
         Add-Content $profile "`$config = (Get-Content `"C:\Users\Administrator\Desktop\Final-Project\config.json`" -Raw) | ConvertFrom-Json"
     }
     $oracle_monitoring = Get-ChildItem "C:\$env:HOMEPATH\Desktop\Final-Project\Oracle-Monitoring"
-    $excluded = @("Start-ServerSetup.ps1", "DHCPScope.ps1", "Start-ClientSetup.ps1",$oracle_monitoring) #,$oracle_monitoring
+    $excluded = @("Start-ServerSetup.ps1", "DHCPScope.ps1", "Start-ClientSetup.ps1", $oracle_monitoring)
     Get-ChildItem -Exclude $excluded ".\" -recurse | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
         Write-Host $_.FullName
         Add-Content $profile ". `"$($_.FullName)`""

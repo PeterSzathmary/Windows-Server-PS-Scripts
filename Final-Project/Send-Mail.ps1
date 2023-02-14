@@ -1,47 +1,75 @@
 
 
+<#
+.SYNOPSIS
+    A short one-line action-based description, e.g. 'Tests if a function is valid'
+.DESCRIPTION
+    A longer description of the function, its purpose, common use cases, etc.
+.NOTES
+    Information or caveats about the function e.g. 'This function is not supported in Linux'
+.LINK
+    Specify a URI to a help page, this will show when Get-Help -Online is used.
+.EXAMPLE
+    Send-Mail -To "Ainslee Ash <aash@windows.lab>" -From "Administrator <administrator@windows.lab>" -Subject "hello with HTML" -AttachmentPath "C:\backup_log_13-02-2023-19-15-38.txt"
+    Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
+#>
+
 
 function Send-Mail {
     [CmdletBinding()]
     param (
-        
+        # to whom send the mail
+        [Parameter(
+            Position = 0,
+            Mandatory = $true
+        )]
+        [string]
+        $To,
+
+        # from who
+        [Parameter(
+            Position = 1,
+            Mandatory = $true
+        )]
+        [string]
+        $From,
+
+        # email subject
+        [Parameter(
+            Position = 2,
+            Mandatory = $true
+        )]
+        [string]
+        $Subject,
+
+        # attachment
+        [Parameter(
+            Position = 3,
+            Mandatory = $true
+        )]
+        [string]
+        $AttachmentPath
     )
     
     begin {
-        # $body= $style + $results
-        # $body | Out-File c:\temp\html.html
-        # $body1= (Get-Content c:\temp\html.html) | out-string 
-        # sendEmail $body1
         $style = Get-Content "$env:UserProfile\Desktop\Final-Project\test.css" | Out-String
-        # -CssUri "$env:UserProfile\Desktop\Final-Project\test.css"
+        
+        $html = Get-Content "$env:UserProfile\Desktop\Final-Project\test.html" | Out-String
+        $html = $html.Replace("/*VarStyle*/", $style)
+        $html = $html.Replace("**VarUsername**", $($env:USERNAME))
+
         $body = ConvertTo-Html -PreContent @"
-        <html>
-            <head>
-                <style>
-                    $($style)
-                </style>
-            </head>
-            <body>
-                <h2>Folders older than 30 days</h2>
-                <div>
-                    Hello, from $($env:USERNAME)
-                    <br></br>
-                    Location: \\Server01\XFER\Cory
-                </div>
-                <br></br>
-                ♕ This is an example of a <a href="#" class="tooltip" aria-label="The tooltip or a hint is a common GUI element that describes the item it's related to.">Tooltip</a>. Click on it to learn more.
-            </body>
-        </html>
+        $html
 "@
 
         $mailParams = @{
-            SmtpServer = "localhost"
-            to         = "Ainslee Ash <aash@windows.lab>"
-            from       = "Administrator <administrator@windows.lab>"
-            Subject    = "hello with HTML"
-            Body       = $($body | Out-String)
-            BodyAsHtml = $true
-            Attachments = "C:\backup_log_13-02-2023-19-15-38.txt"
+            SmtpServer  = "localhost"
+            to          = $To
+            from        = $From
+            Subject     = $Subject
+            Body        = $($body | Out-String)
+            BodyAsHtml  = $true
+            Attachments = $AttachmentPath
             Encoding    = "UTF8"
         }
         

@@ -31,9 +31,18 @@ if (!(Test-Path $profile)) {
         Write-Host $_.FullName
         Add-Content $profile "`$config = (Get-Content `"C:\Users\Administrator\Desktop\Final-Project\config.json`" -Raw) | ConvertFrom-Json"
     }
-    $oracle_monitoring = Get-ChildItem "C:\$env:HOMEPATH\Desktop\Final-Project\Oracle-Monitoring"
-    $excluded = @("Start-ServerSetup.ps1", "DHCPScope.ps1", "Start-ClientSetup.ps1", $oracle_monitoring)
-    Get-ChildItem -Exclude $excluded ".\" -recurse | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
+    # $oracle_monitoring = Get-ChildItem "C:\$env:HOMEPATH\Desktop\Final-Project\Oracle-Monitoring"
+    # $excluded = @("Start-ServerSetup.ps1", "DHCPScope.ps1", "Start-ClientSetup.ps1", $oracle_monitoring)
+    # # it's bit working with $excluded in vCenter
+    # # Get-ChildItem -Path ".\" -recurse -Exclude "Start-ServerSetup.ps1", "DHCPScope.ps1", "Start-ClientSetup.ps1"
+    # Get-ChildItem -Exclude $excluded ".\" -recurse | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
+    #     Write-Host $_.FullName
+    #     Add-Content $profile ". `"$($_.FullName)`""
+    # }
+	$foldersToExclude = @('Oracle-Monitoring', 'Classes')
+	[String[]]$excluded = @($foldersToExclude, 'Start-ServerSetup.ps1', 'Start-ClientSetup.ps1')
+	Get-ChildItem -Exclude $excluded | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
+		
         Write-Host $_.FullName
         Add-Content $profile ". `"$($_.FullName)`""
     }
@@ -94,10 +103,10 @@ if (Test-Path "C:\computer_renamed") {
         $swotGroupUsers = Get-ADGroupMember -Identity 'SWOT Developers' -Recursiv | Select-Object -ExpandProperty SamAccountName
         New-Tablespaces -Users $swotGroupUsers -TablespaceSize "10M"
         New-OracleUsers -Users $swotGroupUsers
-    }
 
-    if ($false) {
-        Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Start-OracleBackup.ps1" -TaskName 'Oracle Incremental Backup RMAN 1130pm' -At "11:30pm" -Description "It starts incremental backup."
-        Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Get-OracleReportSchema.ps1" -TaskName 'Oracle Report Schema RMAN 0145am' -At "1:45am" -Description "It generate report schema."
+        if ($true) {
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Start-OracleBackup.ps1" -TaskName 'Oracle Incremental Backup RMAN 1130pm' -At "11:30pm" -Description "It starts incremental backup."
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Get-OracleReportSchema.ps1" -TaskName 'Oracle Report Schema RMAN 0145am' -At "1:45am" -Description "It generate report schema."
+        }
     }
 }

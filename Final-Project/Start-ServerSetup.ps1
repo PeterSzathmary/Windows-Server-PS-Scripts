@@ -39,9 +39,9 @@ if (!(Test-Path $profile)) {
     #     Write-Host $_.FullName
     #     Add-Content $profile ". `"$($_.FullName)`""
     # }
-	$foldersToExclude = @('Oracle-Monitoring', 'Classes')
-	[String[]]$excluded = @($foldersToExclude, 'Start-ServerSetup.ps1', 'Start-ClientSetup.ps1')
-	Get-ChildItem -Exclude $excluded | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
+    $foldersToExclude = @('Oracle-Monitoring', 'Classes')
+    [String[]]$excluded = @($foldersToExclude, 'Start-ServerSetup.ps1', 'Start-ClientSetup.ps1')
+    Get-ChildItem -Exclude $excluded | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
 		
         Write-Host $_.FullName
         Add-Content $profile ". `"$($_.FullName)`""
@@ -89,7 +89,9 @@ if (Test-Path "C:\computer_renamed") {
     New-ADUsers -DefaultPassword $(ConvertTo-SecureString $config.defaultPasswordForStudents -AsPlainText -Force) -GroupToJoin $config.adGroups[0].groupName
     Add-DNSRecords -DomainName $config.domainName -IPv4OfDNS $config.staticIP -NetID "$($config.dhcpScopes[0].scopeID)/24"
     Install-hMailServer
+
     . $profile
+
     if (Test-Path "C:\hMailServer_installed") {
         Set-hMailServer -DomainName $config.domainName -SMTPBindToIP $config.staticIP
     }
@@ -99,6 +101,8 @@ if (Test-Path "C:\computer_renamed") {
     }
 
     if (Test-Path "C:\oracle_enterprise_installed") {
+        Add-NewEnvVariable -VariableName "ORACLE_HOME" -Path "C:\app\19c\product" -Destination "Machine"
+        Add-EnvPath -Path "C:\app\19c\product\bin" -Destination "Machine"
         Invoke-SQLScript -Path "$env:UserProfile\Desktop\Final-Project\SQL\open_db.sql"
         $swotGroupUsers = Get-ADGroupMember -Identity 'SWOT Developers' -Recursiv | Select-Object -ExpandProperty SamAccountName
         New-Tablespaces -Users $swotGroupUsers -TablespaceSize "10M"

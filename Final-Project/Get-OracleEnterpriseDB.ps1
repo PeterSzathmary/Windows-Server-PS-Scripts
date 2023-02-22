@@ -42,35 +42,58 @@ function Get-OracleEnterpriseDB {
 
             #$iframe = '/html/body/div[5]/div/iframe'
 
-            Start-Sleep 5
+            Start-Sleep 10
 
             $chromeDriver.SwitchTo().Frame(1)
+
+            Start-Sleep 5
+
             $acceptAll = "/html/body/div[8]/div[1]/div/div[3]/a[1]"
 
             $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($acceptAll)).Click()
 
-            $chromeDriver.SwitchTo().ParentFrame()
             Start-Sleep 5
+
+            $chromeDriver.SwitchTo().ParentFrame()
+            Start-Sleep 10
 
             #$downloadZIP = "/html/body/div[2]/section[3]/div/div[1]/div/table/tbody/tr/td[2]/div/a"
             # Windows x64 zip
             $downloadZIP = "/html/body/div[2]/section[3]/div/div[2]/div/table/tbody/tr[1]/td[2]/div/a"
 
             $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($downloadZIP)).Click()
+
+            Start-Sleep 5
+
             $checkbox = "/html/body/div[7]/div/div[1]/div/div/div/form/ul/li/label/input"
 
             $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($checkbox)).Click()
+
+            Start-Sleep 5
+
             $download = "/html/body/div[7]/div/div[1]/div/div/div/form/div/div[2]/div/div/a"
 
             $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($download)).Click()
+
+            Start-Sleep 5
+
             $email = "//*[@id='sso_username']"
             $password = '//*[@id="ssopassword"]'
             $signin = '//*[@id="signin_button"]'
             $emailToDownload = Read-Host "Email"
-            $passwordToDownload = Read-Host "Password" -MaskInput
+            $passwordToDownload = Read-Host "Password" -AsSecureString
+
             $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($email)).SendKeys($emailToDownload)
-            $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($password)).SendKeys($passwordToDownload)
+
+            Start-Sleep 5
+
+            $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($password)).SendKeys([Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($passwordToDownload)))
+
+            Start-Sleep 5
+
             $chromeDriver.FindElement([OpenQA.Selenium.By]::XPath($signin)).Click()
+
+            Start-Sleep 5
 
             New-Item -Path "C:\" -Name $Flag -ItemType File
         }

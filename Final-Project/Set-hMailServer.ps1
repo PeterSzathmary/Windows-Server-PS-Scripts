@@ -43,6 +43,7 @@ function Set-hMailServer {
     
     process {
         if ($Skip -ne $true) {
+            Start-Sleep 35
             # add domain: windows.lab
             #$hMSAdminPass = "Start123"
             $hMS = New-Object -COMObject hMailServer.Application
@@ -71,6 +72,7 @@ function Set-hMailServer {
             $newAccount.AdminLevel = 0 # 0 - User 1 - Domain 2 - Server
             $newAccount.Active = $True
             $newAccount.MaxSize = 10
+            $newAccount.UnlockMailbox()
             $newAccount.Save()
 
             # get all AD students to array

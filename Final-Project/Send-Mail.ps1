@@ -22,7 +22,7 @@
 
     send email with no attachments
 
-    Send-Mail -To "Ainslee Ash <aash@windows.lab>" -From "Administrator <administrator@windows.lab>" -Subject "hello with HTML"
+    Send-Mail -To "Administrator <administrator@windows.lab>" -From "Administrator <administrator@windows.lab>" -Subject "hello with HTML" -HtmlFilePath "$env:UserProfile\Desktop\Final-Project\HTML\test.html" -CssFilePath "$env:UserProfile\Desktop\Final-Project\CSS\test.css"
 
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
@@ -57,32 +57,55 @@ function Send-Mail {
 
         # attachment
         [Parameter(
-            Position = 3,
+            #Position = 3,
             Mandatory = $false
         )]
         [string[]]
-        $Attachments
+        $Attachments,
+
+        # html file path
+        [Parameter(
+            #Positition=4,
+            Mandatory = $false
+        )]
+        [string]
+        $HtmlFilePath,
+
+        # css file path
+        [Parameter(
+            #Positition=5,
+            Mandatory = $false
+        )]
+        [string]
+        $CssFilePath
     )
     
     begin {
-        $style = Get-Content "$env:UserProfile\Desktop\Final-Project\test.css" | Out-String
 
-        $html = Get-Content "$env:UserProfile\Desktop\Final-Project\test.html" | Out-String
-        $html = $html.Replace("/*VarStyle*/", $style)
-        $html = $html.Replace("**VarUsername**", $($env:USERNAME))
+        $body = ""
 
-        $body = ConvertTo-Html -PreContent @"
+        if ($HtmlFilePath -ne "" -and (Test-Path $HtmlFilePath)) {
+            $html = Get-Content $HtmlFilePath | Out-String
+            $html = $html.Replace("**VarUsername**", $($env:USERNAME))
+
+            if ($CssFilePath -ne "" -and (Test-Path $CssFilePath)) {
+                $css = Get-Content $CssFilePath | Out-String
+                $html = $html.Replace("/*VarStyle*/", $css)
+            }
+
+            $body = ConvertTo-Html -PreContent @"
         $html
 "@
+        }
 
         $mailParams = @{
-            SmtpServer  = "localhost"
-            to          = $To
-            from        = $From
-            Subject     = $Subject
-            Body        = $($body | Out-String)
-            BodyAsHtml  = $true
-            Encoding    = "UTF8"
+            SmtpServer = "localhost"
+            to         = $To
+            from       = $From
+            Subject    = $Subject
+            Body       = $($body | Out-String)
+            BodyAsHtml = $true
+            Encoding   = "UTF8"
         }
 
         if ($Attachments) {

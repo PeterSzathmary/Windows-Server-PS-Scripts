@@ -39,7 +39,7 @@ if (!(Test-Path $profile)) {
     #     Write-Host $_.FullName
     #     Add-Content $profile ". `"$($_.FullName)`""
     # }
-    $foldersToExclude = @('Oracle-Monitoring', 'Classes')
+    $foldersToExclude = @('Oracle-Monitoring', 'Classes', 'Mail-Tasks')
     [String[]]$excluded = @($foldersToExclude, 'Start-ServerSetup.ps1', 'Start-ClientSetup.ps1')
     Get-ChildItem -Exclude $excluded | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
 		
@@ -109,8 +109,27 @@ if (Test-Path "C:\computer_renamed") {
         New-OracleUsers -Users $swotGroupUsers
 
         if ($true) {
+            # run incremental backup at 11:30 pm
             Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Start-OracleBackup.ps1" -TaskName 'Oracle Incremental Backup RMAN 1130pm' -At "11:30pm" -Description "It starts incremental backup."
-            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Get-OracleReportSchema.ps1" -TaskName 'Oracle Report Schema RMAN 0145am' -At "1:45am" -Description "It generate report schema."
+            # report schema at 01:45 am --- "C:\schema_report_$(Get-Date -Format "dd-MM-yyyy-HH-mm-ss").txt"
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Get-OracleReportSchema.ps1" -TaskName 'Oracle Report Schema RMAN 0145am' -At "1:45am" -Description "It generates report schema."
+            # tablespace info how full?
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Get-TablespacesUsage.ps1" -TaskName 'Oracle Tablespaces Usage 0245am' -At "2:45am" -Description "Generates report about tablespaces usage."
+            # TODO:
+            # alert log, what ORA errors had occured?
+            
+            #  send mail with latest backup report to admin
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Mail-Tasks\Send-BackupReport.ps1" -TaskName "Send Mail Backup Report 0530am" -At "5:30am" -Description "Sends mail to administrator with backup report."
+
+            #  send mail with latest report schema to admin
+
+            # send email to admin at 5:30 am about:
+            #   - report schema
+            #   - tablespace how full?
+            # send email to users at 5:30 about:
+            #   - 
+            # send email to admin and users at 5:30 am about:
+            #   - send ORA erros and maybe how to prevent them?
         }
     }
 }

@@ -120,3 +120,22 @@ if (!(Test-Path "C:\added_to_domain")) {
 else {
     Write-Host "Already in domain."
 }
+
+# .\network\admin\tnsnames.ora:
+# ORCL =
+# (DESCRIPTION =
+# (ADDRESS = (PROTOCOL = TCP)(HOST = WIN-DC-001.windows.lab)(PORT = 1521))
+# (CONNECT_DATA =
+#   (SERVER = DEDICATED)
+#   (SERVICE_NAME = orcl.windows.lab)
+# )
+# )
+# .\network\admin\sqlnet.ora:
+# 
+# download:
+#       basic package, sqlplus package, tools package
+#       https://www.oracle.com/database/technologies/instant-client/winx64-64-downloads.html
+#       extract packages and copy all to basic package
+
+# when in basic directory and everything copied
+# .\sqlplus.exe pjako/pjako123@WIN-DC-001.windows.lab:1521/orclpdb.windows.lab

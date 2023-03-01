@@ -8,7 +8,15 @@
 .LINK
     Specify a URI to a help page, this will show when Get-Help -Online is used.
 .EXAMPLE
-    Invoke-SQLScript -Path "C:\test.sql"
+
+    With container name
+
+    Invoke-SQLScript -PathToSql "$env:UserProfile\Desktop\Final-Project\SQL\tablespaces_info.sql" -FullLogPath "C:\tablespaces_log_$(Get-Date -Format "dd-MM-yyyy-HH-mm-ss").txt" -Container "orclpdb"
+
+    Withouth container name
+
+    Invoke-SQLScript -PathToSql "$env:UserProfile\Desktop\Final-Project\SQL\tablespaces_info.sql" -FullLogPath "C:\tablespaces_log_$(Get-Date -Format "dd-MM-yyyy-HH-mm-ss").txt"
+
     Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
 
@@ -22,7 +30,23 @@ function Invoke-SQLScript {
             Mandatory=$true
         )]
         [string]
-        $Path
+        $PathToSql,
+
+        # full path of log destination file
+        [Parameter(
+            Position=1,
+            Mandatory=$true
+        )]
+        [string]
+        $FullLogPath,
+
+        # name of the contaienr to use
+        [Parameter(
+            Position=2,
+            Mandatory=$false
+        )]
+        [string]
+        $ContainerName = "CDB`$ROOT"
     )
     
     begin {
@@ -30,7 +54,7 @@ function Invoke-SQLScript {
     }
     
     process {
-        sqlplus.exe / as sysdba "@$Path"
+        sqlplus.exe / as sysdba "@$PathToSql" "'$FullLogPath'" "'$ContainerName'"
     }
     
     end {

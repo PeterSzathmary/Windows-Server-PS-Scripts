@@ -112,6 +112,12 @@ if (Test-Path "C:\computer_renamed") {
         Write-Host "Thunderbird already installed!" -ForegroundColor Yellow
     }
 
+    if (!(Test-Path "C:\domain_profile_disabled")) {
+        Set-NetFirewallProfile -Profile Domain -Enabled False
+
+        New-Item -Path "C:\" -Name "domain_profile_disabled" -ItemType File
+    }
+
     if (Test-Path "C:\oracle_enterprise_installed") {
         Add-NewEnvVariable -VariableName "ORACLE_HOME" -Path "C:\app\19c\product" -Destination "Machine"
         Add-EnvPath -Path "C:\app\19c\product\bin" -Destination "Machine"

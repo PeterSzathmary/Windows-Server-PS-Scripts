@@ -42,11 +42,21 @@ function Add-NewEnvVariable {
     )
         
     begin {
-        $NewPath = [Environment]::GetEnvironmentVariable($VariableName, $Destination) + $Path
+        $exists = $false
+
+        if ([Environment]::GetEnvironmentVariable($VariableName, $Destination)) {
+            $exists = $true
+        }
     }
     
     process {
-        [Environment]::SetEnvironmentVariable( $VariableName, $NewPath, $Destination )
+        if (!$exists) {
+            $NewPath = [Environment]::GetEnvironmentVariable($VariableName, $Destination) + $Path
+            [Environment]::SetEnvironmentVariable( $VariableName, $NewPath, $Destination )
+        }
+        else {
+            Write-Host "$VariableName already exists!" -ForegroundColor Yellow
+        }
     }
     
     end {

@@ -41,13 +41,18 @@ function Register-ScheduledTask_Custom {
     )
     
     begin {
-        
+        $taskExists = Get-ScheduledTask | Where-Object { $_.TaskName -like $TaskName }
     }
     
     process {
-        $Action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument $PathToScript
-        $Trigger = New-ScheduledTaskTrigger -Daily -At $At
-        Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName $TaskName -Description $Description
+        if ($taskExists) {
+            Write-Host "$TaskName already exists!" -ForegroundColor Yellow
+        }
+        else {
+            $Action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument $PathToScript
+            $Trigger = New-ScheduledTaskTrigger -Daily -At $At
+            Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName $TaskName -Description $Description
+        }
     }
     
     end {

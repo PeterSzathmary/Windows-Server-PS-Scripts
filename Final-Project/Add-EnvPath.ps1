@@ -34,11 +34,21 @@ function Add-EnvPath {
     )
         
     begin {
-        $NewPath = [Environment]::GetEnvironmentVariable("PATH", $Destination) + [IO.Path]::PathSeparator + $Path
+        $exists = $false
+
+        if ([Environment]::GetEnvironmentVariable($VariableName, $Destination)) {
+            $exists = $true
+        }
     }
         
     process {
-        [Environment]::SetEnvironmentVariable( "Path", $NewPath, $Destination )
+        if (!$exists) {
+            $NewPath = [Environment]::GetEnvironmentVariable("Path", $Destination) + [IO.Path]::PathSeparator + $Path
+            [Environment]::SetEnvironmentVariable( "Path", $NewPath, $Destination )
+        }
+        else {
+            Write-Host "$Path already there!" -ForegroundColor Yellow
+        }
     }
         
     end {

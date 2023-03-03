@@ -1,7 +1,17 @@
 # install Thunderbird
 # keep firewall on
 # add to domain
-function DownloadMozillaThunderbird{
+
+# if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+#     Write-Output "This script needs to be run As Admin"
+#     Break
+# }
+
+# Add-Content $profile ". `"C:\Users\Administrator\Desktop\Final-Project\Add-EnvPath.ps1`""
+
+# . $profile
+
+function DownloadMozillaThunderbird {
     if (!(Test-Path "C:\mozillaThunderbird_downloaded")) {
         
         $url = "https://download.mozilla.org/?product=thunderbird-102.6.1-SSL&os=win64&lang=en-US"
@@ -67,39 +77,39 @@ else {
 #     Write-Host "MapsBroker already disabled."
 # }
 
-if (!(Test-Path "C:\firefox_installed")) {
-    $workdir = "C:\installer\"
+# if (!(Test-Path "C:\firefox_installed")) {
+#     $workdir = "C:\installer\"
 
-    if (Test-Path -Path $workdir -PathType Container) {
-        Write-Host "$workdir already exists" -ForegroundColor Red
-    }
-    else {
-        New-Item -Path $workdir  -ItemType directory
-    }
+#     if (Test-Path -Path $workdir -PathType Container) {
+#         Write-Host "$workdir already exists" -ForegroundColor Red
+#     }
+#     else {
+#         New-Item -Path $workdir  -ItemType directory
+#     }
 
-    $source = "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US"
-    $destination = "$workdir\firefox.exe"
+#     $source = "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US"
+#     $destination = "$workdir\firefox.exe"
 
-    if (Get-Command 'Invoke-WebRequest') {
-        Invoke-WebRequest $source -OutFile $destination
-    }
-    else {
-        $WebClient = New-Object System.Net.WebClient
-        $webclient.DownloadFile($source, $destination)
-    }
+#     if (Get-Command 'Invoke-WebRequest') {
+#         Invoke-WebRequest $source -OutFile $destination
+#     }
+#     else {
+#         $WebClient = New-Object System.Net.WebClient
+#         $webclient.DownloadFile($source, $destination)
+#     }
 
-    Start-Process -FilePath "$workdir\firefox.exe" -ArgumentList "/S"
+#     Start-Process -FilePath "$workdir\firefox.exe" -ArgumentList "/S"
 
-    Start-Sleep -s 35
+#     Start-Sleep -s 35
 
-    Remove-Item -Force $workdir/firefox*
-    Remove-Item "C:\installer"
+#     Remove-Item -Force $workdir/firefox*
+#     Remove-Item "C:\installer"
 
-    New-Item -Path "C:\" -Name "firefox_installed" -ItemType File
-}
-else {
-    Write-Host "Firefox already installed."
-}
+#     New-Item -Path "C:\" -Name "firefox_installed" -ItemType File
+# }
+# else {
+#     Write-Host "Firefox already installed."
+# }
 
 Push-Location
 Set-Location HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
@@ -107,7 +117,18 @@ Set-ItemProperty . HideFileExt "0"
 Pop-Location
 Stop-Process -processName: Explorer -force # This will restart the Explorer service to make this work.
 
-DownloadMozillaThunderbird
+# DownloadMozillaThunderbird
+
+# Invoke-WebRequest "https://download.oracle.com/otn_software/nt/instantclient/1918000/instantclient-basic-windows.x64-19.18.0.0.0dbru.zip" -OutFile "$env:UserProfile\Downloads\instantclient-basic-package.zip"
+# Invoke-WebRequest "https://download.oracle.com/otn_software/nt/instantclient/1918000/instantclient-sqlplus-windows.x64-19.18.0.0.0dbru.zip" -OutFile "$env:UserProfile\Downloads\instantclient-sqlplus-package.zip"
+# Invoke-WebRequest "https://download.oracle.com/otn_software/nt/instantclient/1918000/instantclient-tools-windows.x64-19.18.0.0.0dbru.zip" -OutFile "$env:UserProfile\Downloads\instantclient-tools-package.zip"
+
+# Expand-Archive "$env:UserProfile\Downloads\instantclient-basic-package.zip" -DestinationPath "C:\Program Files (x86)\oracle-instantclient"
+# Expand-Archive "$env:UserProfile\Downloads\instantclient-sqlplus-package.zip" -DestinationPath "C:\Program Files (x86)\oracle-instantclient"
+# Expand-Archive "$env:UserProfile\Downloads\instantclient-tools-package.zip" -DestinationPath "C:\Program Files (x86)\oracle-instantclient"
+
+#### add to path: "C:\Program Files (x86)\oracle-instantclient"
+Add-EnvPath -Path "C:\Program Files (x86)\oracle-instantclient" -Destination "Machine"
 
 # Add to domain
 if (!(Test-Path "C:\added_to_domain")) {

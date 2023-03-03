@@ -39,8 +39,8 @@ if (!(Test-Path $profile)) {
     #     Write-Host $_.FullName
     #     Add-Content $profile ". `"$($_.FullName)`""
     # }
-    $foldersToExclude = @('Oracle-Monitoring', 'Classes', 'Mail-Tasks')
-    [String[]]$excluded = @($foldersToExclude, 'Start-ServerSetup.ps1', 'Start-ClientSetup.ps1')
+    $foldersToExclude = @('Oracle-Monitoring', 'Classes', 'Mail-Tasks', 'Client')
+    [String[]]$excluded = @($foldersToExclude, 'Start-ServerSetup.ps1')
     Get-ChildItem -Exclude $excluded | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
 		
         Write-Host $_.FullName
@@ -57,6 +57,9 @@ Unblock-Protocol -Protocol "ICMPv4"
 Unblock-Protocol -Protocol 25 # SMTP
 Unblock-Protocol -Protocol 110 # POP3
 Unblock-Protocol -Protocol 143 # IMAP
+
+Unblock-Port -Direction "Inbound" -Port 1521
+
 Install-MozillaFirefox -SleepTime 35
 Show-FileExtensions
 Install-7Zip
@@ -100,10 +103,19 @@ if (Test-Path "C:\computer_renamed") {
         Install-OracleEnterpriseDB
     }
 
+    # install Thunderbird silently
+    if (!(Test-Path "C:\mozillaThunderbird_installed")) {
+        C:\Users\Administrator\Downloads\mozillaThunderbird.exe -ms
+        New-Item -Path "C:\" -Name "mozillaThunderbird_installed" -ItemType File
+    }
+    else {
+        Write-Host "Thunderbird already installed!" -ForegroundColor Yellow
+    }
+
     if (Test-Path "C:\oracle_enterprise_installed") {
         Add-NewEnvVariable -VariableName "ORACLE_HOME" -Path "C:\app\19c\product" -Destination "Machine"
         Add-EnvPath -Path "C:\app\19c\product\bin" -Destination "Machine"
-        Invoke-SQLScript -Path "$env:UserProfile\Desktop\Final-Project\SQL\open_db.sql"
+        Invoke-SQLScript -PathToSql "$env:UserProfile\Desktop\Final-Project\SQL\open_db.sql"
         $swotGroupUsers = Get-ADGroupMember -Identity 'SWOT Developers' -Recursiv | Select-Object -ExpandProperty SamAccountName
         New-Tablespaces -Users $swotGroupUsers -TablespaceSize "10M"
         New-OracleUsers -Users $swotGroupUsers

@@ -26,24 +26,24 @@ function Invoke-SQLScript {
     param (
         # path to the sql script
         [Parameter(
-            Position=0,
-            Mandatory=$true
+            Position = 0,
+            Mandatory = $true
         )]
         [string]
         $PathToSql,
 
         # full path of log destination file
         [Parameter(
-            Position=1,
-            Mandatory=$true
+            Position = 1,
+            Mandatory = $false
         )]
         [string]
         $FullLogPath,
 
         # name of the contaienr to use
         [Parameter(
-            Position=2,
-            Mandatory=$false
+            Position = 2,
+            Mandatory = $false
         )]
         [string]
         $ContainerName = "CDB`$ROOT"
@@ -54,7 +54,12 @@ function Invoke-SQLScript {
     }
     
     process {
-        sqlplus.exe / as sysdba "@$PathToSql" "'$FullLogPath'" "'$ContainerName'"
+        if ($FullLogPath) {
+            sqlplus.exe / as sysdba "@$PathToSql" "'$FullLogPath'" "'$ContainerName'"
+        }
+        else {
+            sqlplus.exe / as sysdba "@$PathToSql"
+        }
     }
     
     end {

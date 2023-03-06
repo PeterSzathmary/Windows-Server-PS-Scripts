@@ -121,6 +121,9 @@ if (Test-Path "C:\computer_renamed") {
     if (Test-Path "C:\oracle_enterprise_installed") {
         Add-NewEnvVariable -VariableName "ORACLE_HOME" -Path "C:\app\19c\product" -Destination "Machine"
         Add-EnvPath -Path "C:\app\19c\product\bin" -Destination "Machine"
+
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
         Invoke-SQLScript -PathToSql "$env:UserProfile\Desktop\Final-Project\SQL\open_db.sql"
         $swotGroupUsers = Get-ADGroupMember -Identity 'SWOT Developers' -Recursiv | Select-Object -ExpandProperty SamAccountName
         New-Tablespaces -Users $swotGroupUsers -TablespaceSize "10M"
@@ -133,21 +136,18 @@ if (Test-Path "C:\computer_renamed") {
             Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Get-OracleReportSchema.ps1" -TaskName 'Oracle Report Schema RMAN 0145am' -At "1:45am" -Description "It generates report schema."
             # tablespace info how full?
             Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Oracle-Monitoring\Get-TablespacesUsage.ps1" -TaskName 'Oracle Tablespaces Usage 0245am' -At "2:45am" -Description "Generates report about tablespaces usage."
-            # TODO:
-            # alert log, what ORA errors had occured?
-            
-            #  send mail with latest backup report to admin
-            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Mail-Tasks\Send-BackupReport.ps1" -TaskName "Send Mail Backup Report 0530am" -At "5:30am" -Description "Sends mail to administrator with backup report."
 
-            #  send mail with latest report schema to admin
+
+            
 
             # send email to admin at 5:30 am about:
             #   - report schema
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Mail-Tasks\Send-BackupReport.ps1" -TaskName "Send Mail Backup Report 0530am" -At "5:30am" -Description "Sends mail to administrator with backup report."
             #   - tablespace how full?
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Mail-Tasks\Send-TablespacesUsage.ps1" -TaskName "Send Mail Tablespaces Usage 0535am" -At "5:35am" -Description "Sends mail to administrator with tablespaces usage."
             # send email to users at 5:30 about:
-            #   - 
-            # send email to admin and users at 5:30 am about:
-            #   - send ORA erros and maybe how to prevent them?
+            #   - their ORA errors
+            Register-ScheduledTask_Custom -PathToScript "$env:UserProfile\Desktop\Final-Project\Mail-Tasks\Deploy-ORA_ErrorsExplanations.ps1" -TaskName 'Send ORA errors 0300am' -At "3:00am" -Description "Send ORA errors and explanations how to prevent them."
         }
     }
 }

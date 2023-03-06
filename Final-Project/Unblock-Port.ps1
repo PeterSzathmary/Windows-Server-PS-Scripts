@@ -30,14 +30,14 @@ function Unblock-Port {
             Position = 1,
             Mandatory = $true
         )]
-        [number]
+        [string]
         $Port
     )
     
     begin {
         $flag = "allow_$($Port)_$Direction"
         if (Test-Path "C:\$flag") {
-            Write-Host "Port $Protocol already unblocked in $Direction direction." -ForegroundColor Yellow
+            Write-Host "Port $Port already unblocked in $Direction direction." -ForegroundColor Yellow
             $Skip = $true
         }
     }

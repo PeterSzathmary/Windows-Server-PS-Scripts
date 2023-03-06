@@ -23,7 +23,7 @@ if (!(Test-Path "C:\allow_icmpv4")) {
     New-Item -Path "C:\" -Name "allow_icmpv4" -ItemType File
 }
 else {
-    Write-Host "ICMPv4 In and Out requests already configured."
+    Write-Host "ICMPv4 In and Out requests already configured." -ForegroundColor Yellow
 }
 
 if (!(Test-Path "C:\file_extensions")) {
@@ -43,7 +43,7 @@ else {
 
 if (!(Test-Path "C:\thunderbird_downloaded")) {
     $url = "https://download.mozilla.org/?product=thunderbird-102.6.1-SSL&os=win64&lang=en-US"
-    $output = "$env:UserProfile\Downloads\mozillaThunderbird.exe"
+    $output = "C:\mozillaThunderbird.exe"
     $start_time = Get-Date
 
     Invoke-WebRequest -Uri $url -OutFile $output
@@ -53,11 +53,15 @@ if (!(Test-Path "C:\thunderbird_downloaded")) {
     New-Item -Path "C:\" -Name "thunderbird_downloaded" -ItemType File
 }
 else {
-    Write-Host "Thunderbird already installed"
+    Write-Host "Thunderbird already installed" -ForegroundColor Yellow
 }
 
-if (Test-Path "C:\thunderbird_downloaded" -and !(Test-Path "C:\thunderbird_installed")) {
-    C:\Users\Administrator\Downloads\mozillaThunderbird.exe -ms
+if ((Test-Path "C:\thunderbird_downloaded") -and !(Test-Path "C:\thunderbird_installed")) {
+    C:\mozillaThunderbird.exe -ms
+
+    Start-Sleep 30
+
+    Remove-Item C:\mozillaThunderbird.exe
 
     New-Item -Path "C:\" -Name "thunderbird_installed" -ItemType File
 }
@@ -84,8 +88,8 @@ else {
     Write-Host "Oracle Instant Client already expanded" -ForegroundColor Yellow
 }
 
-if (Test-Path "C:\oracle_instantclient_archive_expanded" -and !(Test-Path "C:\oracle_instantclient_path_added")) {
-    $NewPath = [Environment]::GetEnvironmentVariable("Path", "Machine") + [IO.Path]::PathSeparator + "C:\Program Files (x86)\oracle-instantclient"
+if ((Test-Path "C:\oracle_instantclient_archive_expanded") -and !(Test-Path "C:\oracle_instantclient_path_added")) {
+    $NewPath = [Environment]::GetEnvironmentVariable("Path", "Machine") + [IO.Path]::PathSeparator + "C:\Program Files (x86)\oracle-instantclient\instantclient_19_18"
     [Environment]::SetEnvironmentVariable("Path", $NewPath, "Machine")
 
     $Path = "C:\Program Files (x86)\oracle-instantclient\instantclient_19_18\glogin.sql"
@@ -124,7 +128,7 @@ if (!(Test-Path "C:\computer_renamed")) {
     }
 }
 else {
-    Write-Host "Computer already renamed."
+    Write-Host "Computer already renamed." -ForegroundColor Yellow
 }
 
 # Add to domain
@@ -136,7 +140,7 @@ if (!(Test-Path "C:\added_to_domain")) {
     Add-Computer -DomainName $domainName -Restart
 }
 else {
-    Write-Host "Already in domain."
+    Write-Host "Already in domain." -ForegroundColor Yellow
 }
 
 # .\network\admin\tnsnames.ora:

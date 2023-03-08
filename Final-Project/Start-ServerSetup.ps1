@@ -31,14 +31,6 @@ if (!(Test-Path $profile)) {
         Write-Host $_.FullName
         Add-Content $profile "`$config = (Get-Content `"C:\Users\Administrator\Desktop\Final-Project\config.json`" -Raw) | ConvertFrom-Json"
     }
-    # $oracle_monitoring = Get-ChildItem "C:\$env:HOMEPATH\Desktop\Final-Project\Oracle-Monitoring"
-    # $excluded = @("Start-ServerSetup.ps1", "DHCPScope.ps1", "Start-ClientSetup.ps1", $oracle_monitoring)
-    # # it's bit working with $excluded in vCenter
-    # # Get-ChildItem -Path ".\" -recurse -Exclude "Start-ServerSetup.ps1", "DHCPScope.ps1", "Start-ClientSetup.ps1"
-    # Get-ChildItem -Exclude $excluded ".\" -recurse | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
-    #     Write-Host $_.FullName
-    #     Add-Content $profile ". `"$($_.FullName)`""
-    # }
     $foldersToExclude = @('Oracle-Monitoring', 'Classes', 'Mail-Tasks', 'Client')
     [String[]]$excluded = @($foldersToExclude, 'Start-ServerSetup.ps1')
     Get-ChildItem -Exclude $excluded | Where-Object { $_.extension -eq ".ps1" } | ForEach-Object {
@@ -126,7 +118,7 @@ if (Test-Path "C:\computer_renamed") {
 
         Invoke-SQLScript -PathToSql "$env:UserProfile\Desktop\Final-Project\SQL\open_db.sql"
         $swotGroupUsers = Get-ADGroupMember -Identity 'SWOT Developers' -Recursiv | Select-Object -ExpandProperty SamAccountName
-        New-Tablespaces -Users $swotGroupUsers -TablespaceSize "10M"
+        New-Tablespaces -Users $swotGroupUsers -TablespaceSize $config.db.newTablespaceSize
         New-OracleUsers -Users $swotGroupUsers
 
         if ($true) {

@@ -1,7 +1,6 @@
 {
     "domainName": "windows.lab",
     "domainServerAdminPassword": "Start123",
-    "allIsDone": true,
     "staticIP": "10.0.0.1",
     "computerName": "WIN-DC-001",
     "hMailAdminPassword": "Start123",
@@ -23,5 +22,8 @@
             "groupName": "SWOT Developers",
             "groupDescription": "Members of this group are SWOT Developers"
         }
-    ]
+    ],
+    "db": {
+        "newTablespaceSize": "10M"
+    }
 }
